@@ -41,19 +41,6 @@ data/                 те же данные отдельными JSON для б
 tools/posts_index.py  сборка рассказов краеведов из постов ВКонтакте
 ```
 
-## Как опубликовать на GitHub Pages
-
-1. Создайте на GitHub пустой репозиторий, например `alshey-portal`.
-2. Отправьте туда эту папку:
-   ```
-   git remote add origin https://github.com/ИМЯ/alshey-portal.git
-   git push -u origin main
-   ```
-3. В репозитории откройте Settings → Pages, в разделе Build and deployment выберите Deploy from a branch, ветку `main` и папку `/ (root)`.
-4. Через минуту сайт будет по адресу `https://ИМЯ.github.io/alshey-portal/`.
-
-Файл `.nojekyll` отключает обработку Jekyll, `404.html` показывается на несуществующих адресах.
-
 ## Карта
 
 Без ключа карта берёт подложку OSM France (данные OpenStreetMap, подписи по-русски), запасной вариант Esri. Для рабочего сайта зарегистрируйтесь на cloud.maptiler.com, создайте ключ, ограничьте его адресом сайта и впишите в `assets/js/data.js`:
