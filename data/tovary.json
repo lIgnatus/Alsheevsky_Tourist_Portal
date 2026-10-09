@@ -1,0 +1,72 @@
+[
+  {
+    "id": "nagrudnik",
+    "n": "Нагрудник в башкирском стиле",
+    "craft": "Этноукрашения",
+    "price": 4500,
+    "sc": "craft:warm"
+  },
+  {
+    "id": "busy",
+    "n": "Ожерелье из натуральных камней",
+    "craft": "Этноукрашения",
+    "price": 2200,
+    "sc": "craft:green"
+  },
+  {
+    "id": "kovrik",
+    "n": "Тканый коврик",
+    "craft": "Ковроткачество",
+    "price": 3800,
+    "sc": "craft:dusk"
+  },
+  {
+    "id": "igrushka",
+    "n": "Глиняная игрушка",
+    "craft": "Керамика",
+    "price": 600,
+    "sc": "craft:day"
+  },
+  {
+    "id": "statuetka",
+    "n": "Деревянная статуэтка",
+    "craft": "Дерево",
+    "price": 1500,
+    "sc": "craft:warm"
+  },
+  {
+    "id": "sumka",
+    "n": "Сумка с вышивкой",
+    "craft": "Вышивка",
+    "price": 2800,
+    "sc": "craft:teal"
+  },
+  {
+    "id": "odeyalo",
+    "n": "Лоскутное одеяло",
+    "craft": "Лоскутное шитьё",
+    "price": 7000,
+    "sc": "craft:warm"
+  },
+  {
+    "id": "varezhki",
+    "n": "Вязаные варежки",
+    "craft": "Вязание",
+    "price": 900,
+    "sc": "craft:green"
+  },
+  {
+    "id": "svecha",
+    "n": "Свеча ручной работы",
+    "craft": "Гипс и свечи",
+    "price": 450,
+    "sc": "craft:dusk"
+  },
+  {
+    "id": "podstavka",
+    "n": "Кованая подставка",
+    "craft": "Металл",
+    "price": 1800,
+    "sc": "craft:day"
+  }
+]

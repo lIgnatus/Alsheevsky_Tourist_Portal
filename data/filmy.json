@@ -1,0 +1,236 @@
+[
+  {
+    "id": "raev",
+    "stills": [
+      [
+        "assets/img/filmy/kadry/raev/01.jpg",
+        0.563
+      ],
+      [
+        "assets/img/filmy/kadry/raev/02.jpg",
+        0.563
+      ],
+      [
+        "assets/img/filmy/kadry/raev/03.jpg",
+        0.75
+      ],
+      [
+        "assets/img/filmy/kadry/raev/04.jpg",
+        0.563
+      ],
+      [
+        "assets/img/filmy/kadry/raev/05.jpg",
+        0.75
+      ],
+      [
+        "assets/img/filmy/kadry/raev/06.jpg",
+        1.333
+      ],
+      [
+        "assets/img/filmy/kadry/raev/07.jpg",
+        0.75
+      ],
+      [
+        "assets/img/filmy/kadry/raev/08.jpg",
+        1.777
+      ],
+      [
+        "assets/img/filmy/kadry/raev/09.jpg",
+        1.333
+      ],
+      [
+        "assets/img/filmy/kadry/raev/10.jpg",
+        0.563
+      ],
+      [
+        "assets/img/filmy/kadry/raev/11.jpg",
+        0.563
+      ],
+      [
+        "assets/img/filmy/kadry/raev/12.jpg",
+        0.563
+      ],
+      [
+        "assets/img/filmy/kadry/raev/13.jpg",
+        1.333
+      ],
+      [
+        "assets/img/filmy/kadry/raev/14.jpg",
+        0.75
+      ]
+    ],
+    "n": "«Александр Фёдорович Раев»",
+    "year": "2025",
+    "genre": "документально-художественный",
+    "dir": "Эльвира Шрайнер",
+    "img": "assets/img/filmy/raev.jpg",
+    "watch": "https://kinescope.io/wtNm5p6MCd81tuCzrDQH4r/pluP3JJl",
+    "trailer": "",
+    "award": "Гран-при кинофестиваля «Зилант», 2026",
+    "awards": [
+      "Гран-при Казанского международного кинофестиваля «Зилант», 2026",
+      "Специальная награда жюри «За сохранение исторической памяти» Всероссийского кинофестиваля «Белая Птица», 2026",
+      "Номинация на премию «На благо мира», 2026",
+      "Лучший документальный фильм XIII Международного кинофестиваля «SKEY-CINEMA», Тамбов, 2025"
+    ],
+    "credits": "Режиссёр Эльвира Шрайнер, спонсор и продюсер Татьяна Гридина вместе с командой LifeStyle Cinema.",
+    "persons": [
+      "raev"
+    ],
+    "places": [
+      "vokzal",
+      "bashnya-raevka",
+      "cafe-triumf"
+    ],
+    "placesNote": "Снимали в Вязовке, Саратове, Уфе, Давлеканове, Раевском, Петербурге, Царском Селе и Екатеринбурге."
+  },
+  {
+    "id": "chekhov",
+    "n": "«А. П. Чехов. Медовый месяц в Башкирии»",
+    "year": "",
+    "genre": "документально-художественный",
+    "dir": "LifeStyle Cinema",
+    "img": "assets/img/filmy/chekhov.jpg",
+    "watch": "https://rutube.ru/video/9db46538467a577e798481db8edf1416/",
+    "trailer": "https://vkvideo.ru/video-209208571_456239031",
+    "credits": "Фильм команды LifeStyle Cinema. Ольгу Книппер сыграла Эльвира Шрайнер, художник Анна Дубакина, оператор Ренад Еникеев.",
+    "persons": [
+      "chekhov",
+      "knipper"
+    ],
+    "places": [
+      "chekhov",
+      "vozdvizhenka"
+    ],
+    "placesNote": "Съёмки прошли в санатории имени А. П. Чехова, там сохранился дом, где жили Чеховы."
+  },
+  {
+    "id": "mayakovsky",
+    "n": "«Маяковский и две Элли»",
+    "year": "2022",
+    "genre": "документально-художественный",
+    "dir": "LifeStyle Cinema",
+    "img": "assets/img/filmy/mayakovsky.jpg",
+    "watch": "https://rutube.ru/video/04ca35f85450b20e8f017c5b8f6a0642/",
+    "trailer": "https://vkvideo.ru/video-209208571_456239042",
+    "credits": "Фильм команды LifeStyle Cinema. Элли Зиберт сыграла Эльвира Шрайнер, Маяковского Рустем Насыров. Фильм снят при поддержке Союза театральных деятелей России.",
+    "persons": [
+      "zibert",
+      "mayakovsky"
+    ],
+    "places": [
+      "davl-museum",
+      "hakimov"
+    ],
+    "placesNote": "Снимали в Уфе. На карте отмечено Давлеканово, где родилась Элли."
+  },
+  {
+    "id": "deev",
+    "stills": [
+      [
+        "assets/img/filmy/kadry/deev/01.jpg",
+        1.777
+      ],
+      [
+        "assets/img/filmy/kadry/deev/02.jpg",
+        0.671
+      ],
+      [
+        "assets/img/filmy/kadry/deev/03.jpg",
+        0.563
+      ],
+      [
+        "assets/img/filmy/kadry/deev/04.jpg",
+        1.777
+      ],
+      [
+        "assets/img/filmy/kadry/deev/05.jpg",
+        1.777
+      ],
+      [
+        "assets/img/filmy/kadry/deev/06.jpg",
+        0.563
+      ],
+      [
+        "assets/img/filmy/kadry/deev/07.jpg",
+        1.777
+      ],
+      [
+        "assets/img/filmy/kadry/deev/08.jpg",
+        1.8
+      ],
+      [
+        "assets/img/filmy/kadry/deev/09.jpg",
+        1.778
+      ],
+      [
+        "assets/img/filmy/kadry/deev/10.jpg",
+        1.778
+      ]
+    ],
+    "n": "«Николай Васильевич Деев»",
+    "year": "премьера в 2026",
+    "genre": "документально-художественный",
+    "dir": "АНО РСЗИ «Триумф»",
+    "img": "assets/img/filmy/deev.jpg",
+    "watch": "",
+    "trailer": "",
+    "credits": "Режиссёр Эльвира Шрайнер, спонсор и продюсер Татьяна Гридина вместе с командой LifeStyle Cinema.",
+    "persons": [
+      "deev"
+    ],
+    "places": [
+      "deev"
+    ],
+    "placesNote": "Особняк Деева стоит в Знаменке, это соседний Белебеевский район."
+  },
+  {
+    "id": "zemlya-alsheya",
+    "stills": [
+      [
+        "assets/img/filmy/kadry/zemlya-alsheya/01.jpg",
+        1.774
+      ],
+      [
+        "assets/img/filmy/kadry/zemlya-alsheya/02.jpg",
+        1.774
+      ],
+      [
+        "assets/img/filmy/kadry/zemlya-alsheya/03.jpg",
+        1.774
+      ],
+      [
+        "assets/img/filmy/kadry/zemlya-alsheya/04.jpg",
+        0.564
+      ],
+      [
+        "assets/img/filmy/kadry/zemlya-alsheya/05.jpg",
+        1.774
+      ],
+      [
+        "assets/img/filmy/kadry/zemlya-alsheya/06.jpg",
+        0.564
+      ],
+      [
+        "assets/img/filmy/kadry/zemlya-alsheya/07.jpg",
+        0.564
+      ]
+    ],
+    "n": "«Земля Альшея»",
+    "year": "премьера в 2027",
+    "genre": "документально-художественный",
+    "dir": "АНО РСЗИ «Триумф»",
+    "img": "assets/img/filmy/zemlya-alsheya.jpg",
+    "watch": "",
+    "trailer": "",
+    "credits": "Режиссёр Эльвира Шрайнер, спонсор и продюсер Татьяна Гридина вместе с командой LifeStyle Cinema.",
+    "persons": [
+      "alshey"
+    ],
+    "places": [
+      "kraeved",
+      "tamgi"
+    ],
+    "placesNote": "Места съёмок уточним. Историю района рассказывают в краеведческом музее."
+  }
+]

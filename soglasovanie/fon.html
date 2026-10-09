@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Фон сайта · вариант B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+<style>
+:root{--bg:#F6F7F2;--ink:#1F2B22;--muted:#5E6B5F;--line:#E1E5DA;--wheat:#E2C46B;--green:#4E6B3A}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font:400 16px/1.55 "Tinos","Times New Roman",Times,serif}
+.wrap{max-width:1240px;margin:0 auto;padding:36px 24px 60px}
+h1{font-size:36px;margin:0}
+.lead{color:var(--muted);max-width:74ch;margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:28px}
+.card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}
+.card.wide{grid-column:1/-1}
+.pv{position:relative;height:320px;background:var(--bg) center/cover no-repeat;overflow:hidden}
+.card.wide .pv{height:420px}
+.pv .mock{position:absolute;inset:40px 22% 0;display:grid;gap:12px;align-content:start}
+.pv .mock i{display:block;height:14px;border-radius:7px;background:#DDE3D5}
+.pv .mock i.t{height:26px;width:60%;background:#C9D1BF}
+.pv .mock .box{height:120px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:0 10px 30px -18px rgba(31,43,34,.35)}
+.pv .mock .row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.pv .mock .row .box{height:90px}
+.map{background-image:url(../assets/img/fon/skhema-susaktau.webp);background-position:68% 50%}
+.b1{background-image:url(../assets/svg/fon/relief-fine.svg)}
+.b2{background-image:url(../assets/svg/fon/relief-topo.svg)}
+.b3::before{content:"";position:absolute;inset:0;background:url(../assets/svg/fon/relief-topo.svg) center/cover;-webkit-mask:linear-gradient(90deg,#000 0,#000 9%,transparent 24%,transparent 76%,#000 91%,#000);mask:linear-gradient(90deg,#000 0,#000 9%,transparent 24%,transparent 76%,#000 91%,#000)}
+.b4{background-image:url(../assets/svg/fon/relief-color.svg)}
+.b5{background-image:url(../assets/svg/fon/relief-shtrih.svg)}
+.tag{position:absolute;left:14px;top:14px;background:var(--ink);color:#fff;border-radius:999px;padding:4px 10px;font:600 12px "Tinos","Times New Roman",Times,serif;letter-spacing:.06em}
+.bd{padding:16px 18px 18px;display:grid;gap:6px}
+.bd h2{margin:0;font-size:20px}
+.bd p{margin:0;color:var(--muted);font-size:15px;text-align:justify;hyphens:auto}
+.bd a{justify-self:start;margin-top:6px;display:inline-flex;align-items:center;min-height:42px;padding:0 16px;border-radius:12px;border:1.5px solid var(--ink);color:var(--ink);text-decoration:none;font-weight:600;font-size:15px}
+.bd a:hover{background:#EEF2E7}
+.bd a.on{background:var(--ink);color:#fff}
+.note{margin-top:28px;padding:18px 20px;border-radius:16px;background:var(--bg);color:var(--muted);font-size:15px;max-width:90ch}
+.note b{color:var(--ink)}
+.off{margin-top:18px}
+.off a{color:var(--green)}
+@media (max-width:820px){.grid{grid-template-columns:1fr}.pv .mock{inset:30px 10% 0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p style="font:600 12px "Tinos","Times New Roman",Times,serif;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin:0">Фон сайта · 09.10.2026</p>
+  <h1>Фон сайта: схема у Сусактау и Сатыртау</h1>
+  <p class="lead">По правке третьего круга на сайте теперь схема участка у Сусактау и Сатыртау в цветах варианта B4, она больше похожа на карту и не напоминает дерево или камень. Ниже прежние исполнения варианта B для сравнения. В первом круге линии были нарисованы от руки. Теперь они построены по настоящему рельефу Альшеевского района: высоты взяты из открытой цифровой модели местности, линии идут через каждые 10 метров. На фоне видны долина Дёмы, овраги и гряды вокруг Сусактау и Раевского. Ниже пять исполнений. Кнопка под каждым открывает сайт с этим фоном, чтобы посмотреть на всех страницах.</p>
+  <div class="grid">
+    <article class="card wide"><div class="pv map"><span class="tag">Схема · сейчас на сайте</span><div class="mock"><i class="t"></i><i></i><i style="width:80%"></i><div class="row"><div class="box"></div><div class="box"></div><div class="box"></div></div></div></div>
+      <div class="bd"><h2>Схема участка у Сусактау и Сатыртау</h2><p>Тот участок дороги 80Н-053, который вы прислали: Сусактау и Сатыртау, излучины Дёмы, озеро Аккуль, Кипчак-Аскарово и Чураево. Цвет по высоте из варианта B4: низины голубоватые, склоны зелёные, вершины тёплые. Сверху мягкая теневая отмывка рельефа, леса, реки, дороги и подписи, как на туристической карте. Данные: OpenStreetMap и открытая модель высот. На телефоне кадр сдвинут на горы.</p><a href="../index.html?fon=map">Посмотреть на сайте</a></div></article>
+    <article class="card wide"><div class="pv b2"><span class="tag">B2</span><div class="mock"><i class="t"></i><i></i><i style="width:80%"></i><div class="row"><div class="box"></div><div class="box"></div><div class="box"></div></div></div></div>
+      <div class="bd"><h2>B2 · Как на топокарте</h2><p>Тонкие линии через 10 метров и чуть плотнее каждые 50 метров, как на настоящей топографической карте. Рельеф читается, но не спорит с текстом. Советую этот вариант.</p><a href="../index.html?fon=b2">Посмотреть на сайте</a></div></article>
+    <article class="card"><div class="pv b1"><span class="tag">B1</span><div class="mock"><i class="t"></i><i></i><i></i><div class="box"></div></div></div>
+      <div class="bd"><h2>B1 · Тонкие линии</h2><p>Все линии одной толщины и одного бледного тона. Самый тихий вариант, фон почти не заметен, пока не присмотришься.</p><a href="../index.html?fon=b1">Посмотреть на сайте</a></div></article>
+    <article class="card"><div class="pv b3"><span class="tag">B3</span><div class="mock"><i class="t"></i><i></i><i></i><div class="box"></div></div></div>
+      <div class="bd"><h2>B3 · Рельеф по краям</h2><p>Линии только по левому и правому краю экрана, а середина с текстом остаётся чистой, как орнамент у Белор-Тау. На телефоне линии идут по всему экрану, но бледнее.</p><a href="../index.html?fon=b3">Посмотреть на сайте</a></div></article>
+    <article class="card"><div class="pv b4"><span class="tag">B4</span><div class="mock"><i class="t"></i><i></i><i></i><div class="box"></div></div></div>
+      <div class="bd"><h2>B4 · Цвет по высоте</h2><p>Низины у Дёмы голубоватые, склоны зелёные, вершины тёплые охристые. Перекликается с цветными горами логотипа «Гряда».</p><a href="../index.html?fon=b4">Посмотреть на сайте</a></div></article>
+    <article class="card"><div class="pv b5"><span class="tag">B5</span><div class="mock"><i class="t"></i><i></i><i></i><div class="box"></div></div></div>
+      <div class="bd"><h2>B5 · Штрих гравюры</h2><p>Линии через каждые 5 метров. На крутых склонах они сгущаются в тень, и рельеф выглядит объёмным, как штриховка на плашках гор. Самый богатый вариант, файл тяжелее остальных.</p><a href="../index.html?fon=b5">Посмотреть на сайте</a></div></article>
+  </div>
+  <div class="note"><b>Как устроено.</b> Фон закреплён и не двигается при прокрутке, поэтому не мешает читать и не нагружает телефон. Карточки, карта и формы лежат на белом и закрывают линии. Высоты: открытые данные Terrarium (Mapzen, AWS Open Data), обработка своя. Прежние варианты A, C и D убраны в архив.</div>
+  <p class="off">Вернуть пустой фон: <a href="../index.html?fon=0">открыть сайт без линий</a>.</p>
+</div>
+<script>
+try{const v=localStorage.getItem('alshey.fon');if(v)document.querySelectorAll('.bd a').forEach(a=>{if(a.href.endsWith('fon='+v))a.classList.add('on');});}catch(e){}
+</script>
+</body>
+</html>

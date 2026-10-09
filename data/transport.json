@@ -1,0 +1,28 @@
+{
+  "train": {
+    "n": "электричка",
+    "station": "станция Раевка",
+    "ll": [
+      54.061224,
+      54.931921
+    ],
+    "speed": 55,
+    "rub_km": 2.2,
+    "rasp": "https://rasp.yandex.ru/search/suburban/?fromName=%D0%A3%D1%84%D0%B0&toName=%D0%A0%D0%B0%D0%B5%D0%B2%D0%BA%D0%B0"
+  },
+  "bus": {
+    "n": "автобус",
+    "station": "автостанция Раевский",
+    "ll": [
+      54.069,
+      54.942
+    ],
+    "speed": 60,
+    "rub_km": 2.6,
+    "rasp": "https://rasp.yandex.ru/search/bus/?fromName=%D0%A3%D1%84%D0%B0&toName=%D0%A0%D0%B0%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9"
+  },
+  "taxi": {
+    "base": 100,
+    "rub_km": 25
+  }
+}

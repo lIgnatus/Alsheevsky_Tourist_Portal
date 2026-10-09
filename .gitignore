@@ -1,0 +1,10 @@
+# служебные файлы систем
+Thumbs.db
+desktop.ini
+.DS_Store
+*.tmp
+*.bak
+
+# черновик отбора цитат: собирается скриптом tools/posts_index.py, в репозиторий не идёт
+tools/posts_candidates.json
+tools/__pycache__/

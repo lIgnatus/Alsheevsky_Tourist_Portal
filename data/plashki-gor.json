@@ -1,0 +1,38 @@
+[
+  {
+    "key": "tury",
+    "n": "Туры",
+    "gora": "Сусактау",
+    "href": "tury.html",
+    "hint": "авторские маршруты жителей"
+  },
+  {
+    "key": "sobytiya",
+    "n": "События",
+    "gora": "Сатыртау",
+    "href": "sobytiya.html",
+    "hint": "календарь событий района",
+    "ev": true
+  },
+  {
+    "key": "filmy",
+    "n": "Фильмы",
+    "gora": "Нарыстау",
+    "href": "filmy.html",
+    "hint": "фильмы о людях района"
+  },
+  {
+    "key": "suveniry",
+    "n": "Сувениры",
+    "gora": "Красный мыс",
+    "href": "suveniry.html",
+    "hint": "лавка мастеров района"
+  },
+  {
+    "key": "razmeshchenie",
+    "n": "Размещение",
+    "gora": "Ярыштау",
+    "href": "razmeshchenie.html",
+    "hint": "дома и базы отдыха"
+  }
+]

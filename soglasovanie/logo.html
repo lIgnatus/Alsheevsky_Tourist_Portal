@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Логотип · варианты на выбор</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+<style>
+.lg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;margin-top:26px}
+.lg{border:1px solid var(--line);border-radius:18px;background:#fff;overflow:hidden}
+.lg .big{display:grid;place-items:center;height:200px;background:var(--bg);color:var(--green)}
+.lg .big svg{width:auto;height:118px}
+.lg .row{display:flex;align-items:center;gap:12px;padding:14px 18px;border-top:1px solid var(--line)}
+.lg .row.dark{background:var(--ink);--logo-gap:var(--ink)}
+.lg .row.dark .logo{color:#fff}.lg .row.dark .logo svg{color:var(--wheat)}.lg .row.dark .logo i{color:#AEB8AC}
+.lg .row.photo{background:#4f5d4f url(../assets/video/hero-poster.jpg) center 30%/cover;--logo-gap:rgba(255,255,255,.9);height:92px}
+.lg .row.photo .logo{color:#fff}.lg .row.photo .logo i{color:#E8EDE4}
+.lg .bd{padding:14px 18px 18px;display:grid;gap:6px;border-top:1px solid var(--line)}
+.lg .bd h2{font-size:19px}
+.lg .bd p{color:var(--muted);font-size:15px;text-align:left}
+.lg .bd .btn{justify-self:start;margin-top:6px}
+.lg .fav{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:13px}
+.lg .fav span{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:8px;background:#fff;border:1px solid var(--line);color:var(--green);--logo-gap:#fff}
+.lg .fav span svg{height:20px;width:auto}
+.sw{display:flex;gap:6px;flex-wrap:wrap}
+.sw i{display:inline-flex;align-items:center;gap:6px;font:400 12.5px var(--f);color:var(--muted);font-style:normal}
+.sw i::before{content:"";width:14px;height:14px;border-radius:4px;background:var(--c)}
+h3.sub{font-size:22px;margin-top:44px}
+</style>
+</head>
+<body data-page="logo">
+<main class="wrap" style="padding-top:36px;padding-bottom:60px">
+  <p class="caps" style="color:var(--green)">Выбор логотипа · 09.10.2026</p>
+  <h1 style="font-size:36px;margin-top:6px">«Гряда» в цвете</h1>
+  <p style="color:var(--muted);max-width:72ch;margin-top:8px;text-align:left">Вы выбрали «Гряду». Теперь каждая гора своим цветом: Сусактау, Сатыртау, Нарыстау с беседкой на вершине и Ярыштау. Между горами тонкий просвет, поэтому цвета не сливаются даже в значке вкладки. Выбран набор «Осень в степи», он стоит на сайте: в шапке, в подвале, на заставке и в значке вкладки. Остальные наборы оставлены для сравнения, кнопка «Посмотреть на сайте» открывает главную с этим вариантом для сравнения.</p>
+  <div class="lg-grid" id="lg"></div>
+  <h3 class="sub">Прежние варианты</h3>
+  <p style="color:var(--muted);margin-top:6px;text-align:left">Для сравнения: одноцветная «Гряда» и остальные варианты из первого круга.</p>
+  <div class="lg-grid" id="lg-old"></div>
+</main>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/common.js"></script>
+<script>
+const MT=['Сусактау','Сатыртау','Нарыстау','Ярыштау'];
+const why={
+  g1:'Зелёная Сусактау, пшеничная Сатыртау, терракотовая Нарыстау и голубая Ярыштау. Цвета степи, поля, глины и Дёмы. Самый спокойный и природный набор.',
+  g2:'Цвета из тамг маршрута и паспорта: красный, зелёный, золотой и тёмно-синий. Ярко, хорошо видно на сувенирах и вывесках.',
+  g3:'Оливковый, охра, ржавчина и сланец, как склоны в сентябре. Тёплый и взрослый вариант, близкий к гравюрам на плашках.',
+  g4:'Те же горы мягкими акварельными цветами. Лёгкий вариант для светлого сайта, но на мелких размерах читается слабее остальных.',
+  gryada:'Одноцветная «Гряда» из первого круга.',
+  tamga:'Знак Сусактау в манере тамги на тёмной плашке.',
+  pechat:'Круглая печать с горой и рекой Дёмой.',
+  gravyura:'Сусактау, заштрихованная как гравюры на плашках гор.',
+  dema:'Силуэт Сусактау и голубая линия Дёмы под ней.'
+};
+const card=(k,l)=>`<article class="lg">
+  <div class="big">${l.svg(190,118)}</div>
+  ${l.c?`<div class="row sw">${l.c.map((c,i)=>`<i style="--c:${c}">${MT[i]}</i>`).join('')}</div>`:''}
+  <div class="row"><span class="logo">${l.svg(40,26)}<span><b>Альшеевский район</b><i>туристический портал</i></span></span></div>
+  <div class="row dark"><span class="logo">${l.svg(40,26)}<span><b>Альшеевский район</b><i>туристический портал</i></span></span></div>
+  ${l.c?`<div class="row photo"><span class="logo">${l.svg(56,36)}<span><b>Альшеевский район</b><i>на заставке поверх видео</i></span></span></div>`:''}
+  <div class="bd"><h2>${l.n}${k===A.logoKey?' · сейчас на сайте':''}</h2><p>${why[k]||''}</p><div class="fav"><span>${l.svg(26,18)}</span>значок вкладки</div><a class="btn ${k===A.logoKey?'dark':''}" href="../index.html?logo=${k}">Посмотреть на сайте</a></div>
+</article>`;
+const E=Object.entries(A.LOGOS);
+document.getElementById('lg').innerHTML=E.filter(([k,l])=>l.c).map(([k,l])=>card(k,l)).join('');
+document.getElementById('lg-old').innerHTML=E.filter(([k,l])=>!l.c).map(([k,l])=>card(k,l)).join('');
+</script>
+</body>
+</html>
