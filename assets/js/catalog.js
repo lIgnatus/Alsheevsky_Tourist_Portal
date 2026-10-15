@@ -46,8 +46,7 @@ function catalog(){
   document.title=`${CFG.title} · Туристический портал Альшеевского района`;
   main.innerHTML=`<div class="page-h"><h1>${CFG.title}</h1><p class="found" id="found"></p></div>
     <p class="demo-note">${ic('spark',18)}<span>${T(CFG.note)}</span></p>
-    ${CFG.how?`<section class="how" aria-label="Как работает лавка"><h2>Как работает лавка</h2><ol><li>Мастер выставляет работы бесплатно</li><li>Покупатель оформляет заказ на сайте</li><li>Портал передаёт заказ мастеру и договаривается о доставке или самовывозе</li></ol><p>Портал работает как агент: небольшая комиссия входит в цену и берётся только с проданного</p><p><b>Где купить вживую.</b> ${T(D.shop?D.shop.offline:'')}</p></section>
-    ${D.motivy?`<section class="motivy" aria-label="${esc(D.motivy.n)}"><img src="${D.motivy.logo}" alt="Логотип арт-сообщества «${esc(D.motivy.n)}»"><div><h2>${esc(D.motivy.n)}</h2><p class="slogan">${esc(D.motivy.slogan)}</p>${D.motivy.txt.map(t=>`<p>${T(t)}</p>`).join('')}</div></section>`:''}
+    ${CFG.how?`${D.motivy?`<section class="motivy" aria-label="${esc(D.motivy.n)}"><img src="${D.motivy.logo}" alt="Логотип арт-сообщества «${esc(D.motivy.n)}»"><div><h2>${esc(D.motivy.n)}</h2><p class="slogan">${esc(D.motivy.slogan)}</p>${D.motivy.txt.map(t=>`<p>${T(t)}</p>`).join('')}</div></section>`:''}
     <div style="height:18px"></div>`:''}
     <div class="filters" role="search">
       <div class="grp"><span class="lbl">${CFG.typeLbl}:</span><button type="button" class="chip" data-t="all" aria-pressed="true">Все</button>${CFG.types.map(t=>`<button type="button" class="chip" data-t="${esc(t)}" aria-pressed="false">${esc(t)}</button>`).join('')}</div>
