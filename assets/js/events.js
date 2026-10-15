@@ -60,6 +60,8 @@ function plate(e,nav){
   if(e.dt){view=new Date(e.dt.getFullYear(),e.dt.getMonth(),1);draw();}
   const slides=e.imgs?e.imgs.map(s=>`<img src="${s}" alt="${esc(e.n)}">`):[A.scene(e.sc||'fest:day')];
   const when=e.dt?`${dstr(e)}${e.time?' · '+e.time:' · время уточним'}`:'дата уточняется';
+  /* адрес, как попасть, где остановиться и карта мероприятия (правка 116) */
+  const pl=e.mapId&&D.places.find(p=>p.id===e.mapId), ll=e.ll||(pl&&pl.ll)||null;
   A.overlay({title:'Событие',cls:'evp',hash:e.id,onClose:()=>{openId=null;},html:`
     ${A.gallery(slides)}
     <div class="in"><h2>${esc(e.n)}</h2><p class="when">${when}</p>
@@ -68,15 +70,24 @@ function plate(e,nav){
       ${e.films?`<div class="films">${e.films.map(id=>D.films.find(f=>f.id===id)).filter(Boolean).map(f=>A.filmLink(f)).join('')}</div>`:''}${e.allFilms?`<div class="films"><a class="film-link" href="filmy.html">${ic('play',13)}Фильмы о людях района</a></div>`:''}
       ${e.txt.map(p=>`<p>${T(p)}</p>`).join('')}
       ${e.filler?'<p class="fine">Описание временное, уточним по фактам.</p>':''}
+      <div class="ev-info">
+        <section><h3>${ic('pin',18)}Адрес</h3><p>${T(e.addr||e.place)}</p></section>
+        <section><h3>${ic('route',18)}Как попасть</h3><p>На машине из Уфы около двух часов. На электричке до станции Раевка или на автобусе до Раевского, дальше на такси: ${T(D.transit&&D.transit.taxi&&D.transit.taxi.phone||'[номер такси уточнить]')}.</p>
+          <p class="btns">${ll?`<a class="btn" href="https://yandex.ru/maps/?rtext=${D.ufa[0]},${D.ufa[1]}~${ll[0]},${ll[1]}&rtt=auto" target="_blank" rel="noopener">${ic('ext',15)}Маршрут на машине</a>`:''}<a class="btn" href="https://rasp.yandex.ru/search/suburban/?fromName=%D0%A3%D1%84%D0%B0&toName=%D0%A0%D0%B0%D0%B5%D0%B2%D0%BA%D0%B0" target="_blank" rel="noopener">${ic('clock',15)}Электрички</a><a class="btn" href="https://rasp.yandex.ru/search/bus/?fromName=%D0%A3%D1%84%D0%B0&toName=%D0%A0%D0%B0%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9" target="_blank" rel="noopener">${ic('clock',15)}Автобусы</a></p></section>
+        <section><h3>${ic('house',18)}Где остановиться</h3><p>Рядом готовятся гостиница «Триумф» и ЭтноКомплекс «Земля Альшея». <a href="razmeshchenie.html">Размещение</a></p></section>
+        <section class="ev-map-s"><h3>${ic('pin',18)}Карта мероприятия</h3>${ll?`<div class="ev-map" id="evmap"></div>`:`<p class="fine">Точку на карте добавим, когда организаторы объявят площадку.</p>`}</section>
+      </div>
       <div class="acts">${e.soc.length?e.soc.map(s=>`<a class="btn" href="${s.url}" target="_blank" rel="noopener">${ic('vk',20)}${esc(s.n)}</a>`).join(''):`<span class="fine">Группы события в соцсетях ${T('[уточнить]')}</span>`}</div>
-    </div>`, init:b=>A.bindGallery(b)});
+    </div>`, init:b=>{ A.bindGallery(b);
+      if(ll&&window.L){ setTimeout(()=>{ const m=L.map($('#evmap',b),{scrollWheelZoom:false,attributionControl:true}).setView(ll,14); A.baseLayer(m); m.attributionControl.setPrefix(false);
+        L.marker(ll,{icon:L.divIcon({className:'ev-pin',html:`<span>${ic('calendar',16)}</span>`,iconSize:[34,34],iconAnchor:[17,34]})}).addTo(m).bindTooltip(e.n,{direction:'top',offset:[0,-30]}); },350); } }});
   openId=e.id;
   if(nav) A.markNav(); /* открыто переходом по якорю, поэтому «Назад» и «×» возвращают к календарю */
 }
 function route(ev){
   const id=decodeURIComponent(location.hash.slice(1)), e=D.events.find(x=>x.id===id);
   if(e){ if(openId!==id) plate(e,!!ev); }
-  else if(openId && !['o-brende','partneram','kontakty'].includes(id.split('/')[0])){ openId=null; A.closeOverlay(true); }
+  else if(openId && !['o-brende','partneram','kontakty','pasport-turista'].includes(id.split('/')[0])){ openId=null; A.closeOverlay(true); }
 }
 window.addEventListener('hashchange',route); route(null);
 })();

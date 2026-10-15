@@ -1,4 +1,4 @@
-/* Фильмы (6.8): карусель (5.27), «Личность» (5.28), «Места съёмок» (5.29),
+/* Фильмы (6.8): карусель с рамками-плёнкой (5.27, правка 121), «Личность» (5.28),
    «Пригласите наш фильм» (5.30), стиль коллажа (4.2, 5.31).
    Фильмы, ссылки и тексты — сайт АНО «Триумф». Адрес фильма — filmy.html#id. */
 (function(){
@@ -17,7 +17,6 @@ main.innerHTML=`<div class="k-head"><div><h1>Фильмы</h1><p style="font-siz
   <div class="fmeta" id="meta" aria-live="polite"></div>
   <div class="dots" id="dots">${F.map((f,k)=>`<button type="button" aria-label="${esc(f.n)}"></button>`).join('')}</div>
   <section class="prs" id="prs" aria-label="Личность"></section>
-  <section class="places" id="places" aria-label="Места съёмок"></section>
   <section class="invite" aria-label="Пригласите наш фильм"><div><small>Показ в вашем городе</small><h2>Позовите наше кино к себе</h2><p>Мы привозим фильмы в школы, клубы и библиотеки и остаёмся на разговор со зрителями. Оставьте заявку, и договоримся о показе.</p></div><button class="btn" type="button" id="inv">${ic('play',16)}Пригласить фильм</button></section>`;
 
 function draw(){
@@ -27,8 +26,8 @@ function draw(){
   const f=F[i];
   $('#meta').innerHTML=`<h2>${esc(f.n)}</h2><p class="m">${[f.year,f.genre].filter(Boolean).map(esc).join(' · ')}</p>
     <div class="acts">${f.watch?`<button type="button" class="btn red big" data-play="${i}">${ic('play',18)}Смотреть фильм</button>`:`<span class="btn" aria-disabled="true">${esc(f.year)}</span>`}${f.trailer?`<button type="button" class="btn" data-trailer="${i}">Трейлер</button>`:''}</div>${f.awards?`<ul class="awards" aria-label="Награды фильма">${f.awards.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}${f.credits?`<p class="credits">${esc(f.credits)}</p>`:''}`;
-  pi=0; person(); places();
-  if(location.hash.slice(1)!==f.id&&!['o-brende','partneram','kontakty'].includes(location.hash.slice(1).split('/')[0])) history.replaceState(null,'','#'+f.id);
+  pi=0; person();
+  if(location.hash.slice(1)!==f.id&&!['o-brende','partneram','kontakty','pasport-turista'].includes(location.hash.slice(1).split('/')[0])) history.replaceState(null,'','#'+f.id);
 }
 /* ---------- стопка фотокарточек слева: фото героя и кадры со съёмок (правка 91) ----------
    Спереди одна карточка, за ней видны ещё две. Нажатие на карточку, стрелки, свайп или ← → листают:
@@ -106,14 +105,6 @@ function person(){
   let x0=null; box.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
   box.addEventListener('touchend',e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>36){ e.preventDefault(); deckGo(dx<0?1:-1); } x0=null; });
 }
-function places(){
-  const f=F[i], ps=f.places.map(id=>PL[id]).filter(Boolean), can=ps.filter(p=>p.st!=='soon');
-  $('#places').innerHTML=`<h3>Места съёмок</h3><p>${T(f.placesNote)}</p>
-    <div class="chips">${ps.map(p=>`<a class="chip" href="index.html#mesto/${p.id}">${ic('pin',14)}${esc(p.n)}</a>`).join('')}</div>
-    <div class="acts">${ps.length?`<a class="btn" href="index.html#mesto/${ps[0].id}">${ic('pin',17)}Показать на карте</a>`:''}${can.length?`<button class="btn" type="button" id="addp">${ic('plus',17)}Добавить места в план</button>`:''}</div>`;
-  const b=$('#addp'); if(b) b.addEventListener('click',()=>{const n=A.addMany(can.map(p=>p.id));A.toast(n?`Добавили в план мест ${n}. План на главной, в разделе «Что посмотреть»`:'Эти места уже в плане');});
-}
-
 /* плеер: фильм открывается прямо на странице */
 const embed=url=>{ if(!url) return '';
   if(/video_ext\.php|rutube\.ru\/play\/embed|kinescope\.io\/embed/.test(url)) return url;
@@ -136,10 +127,11 @@ draw();
 
 /* 5.30 форма приглашения фильма */
 $('#inv').addEventListener('click',()=>{
-  const box=A.overlay({title:'Пригласить фильм',html:`<div style="padding:24px;max-width:640px;margin:0 auto"><form class="form" novalidate data-ok="Заявка на показ отправлена. Мы свяжемся с вами" style="box-shadow:none">
+  const box=A.overlay({title:'Пригласить фильм',html:`<div style="padding:24px;max-width:640px;margin:0 auto"><form class="form" novalidate data-sheet="Пригласить фильм" data-ok="Заявка на показ отправлена. Мы свяжемся с вами" style="box-shadow:none">
     <h3>Заявка на показ</h3>
     ${A.field('Фильм','film',{options:F.filter(f=>f.watch).map(f=>f.n),req:1})}
-    ${A.field('Организация','org',{req:1})}${A.field('Город','city',{req:1})}${A.field('Контакт: телефон или почта','contact',{req:1})}
+    ${A.field('Организация','org',{req:1})}${A.field('Город','city',{req:1})}
+    <div class="fld2">${A.field('Телефон','phone',{type:'tel',req:1})}${A.field('Почта','email',{type:'email'})}</div>
     ${A.field('Желаемая дата','date',{type:'date'})}${A.field('Комментарий','comment',{area:1})}${A.agree()}
     <button class="btn dark full" type="submit">Отправить заявку</button></form></div>`});
   A.bindForms(box);

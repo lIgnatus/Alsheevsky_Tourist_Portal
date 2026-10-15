@@ -45,9 +45,15 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden&&v.paused
 
 /* ---------- плашки гор: гравюра в цветах горы, мелко название горы (правка 106) ---------- */
 const tiles=$('#tiles');
-tiles.innerHTML=D.tiles.map((t,i)=>{const g=GORY[t.key];return `<a class="mc${t.ev?' ev':''}" href="${t.href}" style="--mc-c:${g.dark};--mc-l:${g.line};--i:${i}">
+/* Плашки серые, пока раздел не открыт. Открыл раздел и вернулся: гора и нижняя часть плашки окрашиваются
+   (у «Сувениров» нижняя часть цвета воды Асылыкуля). Только что открытые окрашиваются на глазах (правка 112). */
+let seenK=[], shown=[];
+try{ seenK=JSON.parse(localStorage.getItem('alshey.seen')||'[]'); shown=JSON.parse(localStorage.getItem('alshey.seenShown')||'[]'); }catch(e){}
+tiles.innerHTML=D.tiles.map((t,i)=>{const g=GORY[t.key], on=seenK.includes(t.key), fresh=on&&!shown.includes(t.key);
+  return `<a class="mc${t.ev?' ev':''}${on?' seen':''}${fresh?' fresh':''}" href="${t.href}" style="--mc-c:${g.dark};--mc-l:${g.line};--tint:${t.tint||'#fff'};--i:${i}">
   <span class="art">${g.svg}</span>
-  <span class="mc-txt"><b>${t.n}</b><span>${t.hint}</span><small class="gora-n">${esc(t.gora)}</small></span></a>`;}).join('');
+  <span class="mc-txt"><b>${t.n}</b><small class="gora-n">${esc(t.gora)}</small></span></a>`;}).join('');
+try{ localStorage.setItem('alshey.seenShown',JSON.stringify(seenK)); }catch(e){}
 
 
 /* ---------- первый экран целиком в окне: видео плюс плашки ----------

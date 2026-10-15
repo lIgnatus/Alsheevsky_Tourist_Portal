@@ -188,7 +188,8 @@ A.updCounter = bump => {
 function header(){
   const h=$('#hdr'); if(!h) return;
   h.className='';
-  h.innerHTML=`<div class="hdr wide">
+  const back=!A.isHome?`<button class="hdr-back round" type="button" aria-label="Назад">${A.ic('left',20)}</button>`:'';
+  h.innerHTML=`<div class="hdr wide">${back}
     <a class="logo" href="index.html" aria-label="Альшеевский район, туристический портал, на главную">${A.logo()}<span><b>Альшеевский район</b><i>туристический портал</i></span></a>
     <button class="burger" type="button" aria-label="Меню" aria-expanded="false">${A.ic('menu',22)}</button>
     <nav class="topnav" aria-label="Верхняя панель">
@@ -198,6 +199,13 @@ function header(){
     </nav>
   </div>`;
   const nav=$('.topnav',h), bg=$('.burger',h);
+  /* «Назад»: в каталоге со страницы объекта к списку, иначе на предыдущую страницу сайта или на главную */
+  const hb=$('.hdr-back',h);
+  if(hb) hb.addEventListener('click',()=>{
+    if(['tury','suveniry','razmeshchenie'].includes(A.page)&&location.hash.length>1){ location.hash=''; return; }
+    let same=false; try{ same=!!document.referrer&&new URL(document.referrer).origin===location.origin&&document.referrer!==location.href; }catch(e){}
+    if(same&&history.length>1) history.back(); else location.href='index.html';
+  });
   bg.addEventListener('click',()=>{const o=nav.classList.toggle('open');bg.setAttribute('aria-expanded',String(o));h.classList.add('solid');});
   $$('[data-open]',h).forEach(b=>b.addEventListener('click',()=>{nav.classList.remove('open');bg.setAttribute('aria-expanded','false');location.hash=b.dataset.open;}));
   let lastY=scrollY, busy=false;
@@ -274,15 +282,24 @@ A.closeOverlay = function(silent){
 A.ovlHash = () => cur && cur.o.hash;
 A.markNav = () => { if(cur) cur.o.nav = true; };
 
-/* ---------- 6.3 О бренде: вкладки, окно на весь экран (правка 74) ---------- */
-const TABS=[{id:'',n:'О бренде'},{id:'etnokompleks',n:'ЭтноКомплекс'},{id:'lyudi',n:'Люди проекта'}];
-function brandTab(id){
-  if(id==='etnokompleks') return `<h3>ЭтноКомплекс</h3><div class="soon">Скоро здесь появится информация</div>`;
-  if(id==='lyudi') return `<h3>Люди проекта</h3><p class="muted" style="font-size:14px">Состав и подписи пришлёт заказчик <span class="todo">[уточнить]</span></p><div class="people">${D.people.map(p=>`<figure class="person" style="margin:0"><img src="${p.img}" alt="${A.esc(p.n)}" loading="lazy"><b>${A.esc(p.n)}</b><span>${A.esc(p.role)}</span></figure>`).join('')}</div>`;
-  return `<h3>Земля Альшея, бренд территории</h3>
-    <p>Альшеевский район носит имя Альшея Мергена Тохтанаева, башкирского батыра XVIII века. Он основал деревню Альшеево, с неё и начинается летопись района. «Земля Альшея» объединяет то, что сейчас делается в районе: фильмы о земляках, краеведческие встречи и будущий ЭтноКомплекс.</p>
+/* ---------- 6.3 О бренде: три вкладки (правка 117) ----------
+   «О бренде»: бренд портала, люди проекта и как создавали сайт.
+   «ЭтноКомплекс» и «Кинофестиваль»: рассказ и визуализации, тексты дополнит заказчик. */
+const TABS=[{id:'',n:'О бренде'},{id:'etnokompleks',n:'ЭтноКомплекс «Земля Альшея»'},{id:'festival',n:'Кинофестиваль «Земля Альшея»'}];
+const BSUB=[{id:'brend',n:'Бренд'},{id:'lyudi',n:'Люди проекта'},{id:'kak',n:'Как создавали сайт'}];
+function brandSub(id){
+  if(id==='lyudi') return `<h3>Люди проекта</h3><p class="muted" style="font-size:15px">Подписи и состав уточнит заказчик <span class="todo">[уточнить]</span></p><div class="people">${D.people.map(p=>`<figure class="person" style="margin:0"><img src="${p.img}" alt="${A.esc(p.n)}" loading="lazy"><b>${A.esc(p.n)}</b><span>${A.esc(p.role)}</span></figure>`).join('')}</div>`;
+  if(id==='kak') return `<h3>Как создавали сайт</h3>
+    <p>Пять разделов на главной нарисованы как пять настоящих гор района. Для каждой горы мы взяли фотографию, обвели её силуэт и перенесли контур на плашку, а склон заштриховали в цвете горы, как гравюру.</p>
+    <div class="howmade">${(D.howMade||[]).map(h=>{const t=D.tiles.find(x=>x.key===h.key)||{};const g=window.GORY&&GORY[h.key];return `<article class="hm">
+      <figure class="hm-ph"><img src="${h.ph}" alt="${A.esc(h.gora)}, контур обведён по фото" loading="lazy"><figcaption>Фото и обведённый контур</figcaption></figure>
+      <span class="hm-arr" aria-hidden="true">${A.ic('arrow',26)}</span>
+      <div class="hm-tile" style="--tint:${t.tint||'#fff'}${g?`;--mc-c:${g.dark}`:''}">${g?`<span class="hm-art" style="--mc-c:${g.dark}">${g.svg}</span>`:''}<b>${A.esc(t.n||'')}</b><i>${A.esc(h.gora)}</i></div>
+      <p class="hm-why"><b>${A.esc(h.gora)}.</b> ${A.esc(h.why)}</p></article>`;}).join('')}</div>`;
+  return `<h3>Туристический портал Альшеевского района</h3>
+    <p>Альшеевский район носит имя Альшея Мергена Тохтанаева, башкирского батыра XVIII века. Он основал деревню Альшеево, с неё и начинается летопись района. «Земля Альшея» объединяет то, что сейчас делается в районе: фильмы о земляках, краеведческие встречи, будущий ЭтноКомплекс и кинофестиваль.</p>
     <p>Портал помогает понять, куда поехать, где остановиться и у кого купить то, что сделано здесь.</p>
-    <p><span class="todo">[Рассказ о том, как появился бренд, пришлёт заказчик. Исторические факты берём только из проверенных источников.]</span></p>
+    <p><span class="todo">[Подробный рассказ о бренде пришлёт заказчик. Исторические факты берём только из проверенных источников.]</span></p>
     <div class="brand-logo">
       <div class="bl-sign">${A.logo(230,144)}</div>
       <div><h4>Логотип «Гряда»</h4>
@@ -291,8 +308,21 @@ function brandTab(id){
       </div>
     </div>`;
 }
+function brandTab(id,sub){
+  const B=D.brandTabs||{};
+  if(id==='etnokompleks'){ const e=B.etno||{}; return `<h3>${A.esc(e.n||'ЭтноКомплекс')}</h3><p class="lead-b">${A.esc(e.lead||'')}</p>${(e.txt||[]).map(x=>`<p>${A.t(x)}</p>`).join('')}
+    <div class="viz">${[1,2,3].map(i=>`<figure class="viz-ph">${A.scene('yurt:warm')}<figcaption>Визуализация ${i} <span class="todo">[пришлёт заказчик]</span></figcaption></figure>`).join('')}</div>`; }
+  if(id==='festival'){ const f=B.festival||{}; return `<h3>${A.esc(f.n||'Кинофестиваль')}</h3><p class="lead-b">${A.esc(f.lead||'')}</p>
+    <div class="fest-facts">${(f.facts||[]).map(([n,t])=>`<div><b>${n}</b><span>${A.esc(t)}</span></div>`).join('')}</div>
+    <div class="fest-row">${f.img?`<figure class="fest-img"><img src="${f.img}" alt="Кинофестиваль «Земля Альшея»" loading="lazy"></figure>`:''}<div>${(f.txt||[]).map(x=>`<p>${A.t(x)}</p>`).join('')}<p><a class="btn" href="sobytiya.html#kinofestival-2027">${A.ic('calendar',17)}Фестиваль в календаре событий</a></p></div></div>
+    <div class="viz">${[1,2,3].map(i=>`<figure class="viz-ph">${A.scene('film:dusk')}<figcaption>Визуализация ${i} <span class="todo">[пришлёт заказчик]</span></figcaption></figure>`).join('')}</div>`; }
+  const sb=BSUB.some(b=>b.id===sub)?sub:'brend';
+  return `<div class="bsub" role="tablist" aria-label="О бренде">${BSUB.map(b=>`<button type="button" class="chip" role="tab" data-sub="${b.id}" aria-pressed="${b.id===sb}">${b.n}</button>`).join('')}</div><div class="bsub-p">${brandSub(sb)}</div>`;
+}
 function openBrand(tab){
-  const box=A.overlay({title:'О бренде',cls:'col page',hash:'o-brende'+(tab?'/'+tab:''),html:`
+  let sub='';
+  if(['lyudi','kak','brend'].includes(tab)){ sub=tab; tab=''; }
+  const box=A.overlay({title:'О бренде',cls:'col page',hash:'o-brende'+(tab?'/'+tab:sub&&sub!=='brend'?'/'+sub:''),html:`
     <div class="b-col" aria-hidden="true">
       <div class="b-title">Земля<br>Альшея</div>
       <div class="stk" style="left:36%;top:64px;width:min(460px,46%);height:250px"><div class="cut"></div></div>
@@ -301,13 +331,19 @@ function openBrand(tab){
       <div class="stk r" style="left:86%;top:170px;transform:rotate(12deg)"><svg width="52" height="120" viewBox="0 0 70 160"><path d="M26 4h18v30c0 6 16 14 16 34v80c0 6-4 9-10 9H20c-6 0-10-3-10-9V68c0-20 16-28 16-34z" fill="#F5F2EA"/><rect x="10" y="84" width="50" height="44" fill="#D3261B"/><text x="35" y="111" text-anchor="middle" font-family="Tinos, Times New Roman, serif" font-size="11" font-weight="700" fill="#F5F2EA">КУМЫСЪ</text></svg></div>
     </div>
     <div class="tabs" role="tablist">${TABS.map(t=>`<button type="button" role="tab" data-tab="${t.id}" aria-selected="${t.id===(tab||'')}">${t.n}</button>`).join('')}</div>
-    <div class="tabp" role="tabpanel">${brandTab(tab||'')}</div>`});
+    <div class="tabp" role="tabpanel">${brandTab(tab||'',sub)}</div>`});
+  const p=$('.tabp',box);
+  const swap=html=>{ p.classList.remove('swap'); p.innerHTML=html; void p.offsetWidth; p.classList.add('swap'); };
+  const setHash=h=>{ cur.o.hash='o-brende'+(h?'/'+h:''); history.replaceState(null,'','#'+cur.o.hash); };
   $$('[data-tab]',box).forEach(b=>b.addEventListener('click',()=>{
     $$('[data-tab]',box).forEach(x=>x.setAttribute('aria-selected',String(x===b)));
-    const p=$('.tabp',box); p.classList.remove('swap'); p.innerHTML=brandTab(b.dataset.tab); void p.offsetWidth; p.classList.add('swap');
-    cur.o.hash='o-brende'+(b.dataset.tab?'/'+b.dataset.tab:'');
-    history.replaceState(null,'','#'+cur.o.hash);
+    swap(brandTab(b.dataset.tab,'')); setHash(b.dataset.tab);
   }));
+  /* внутри «О бренде»: Бренд · Люди проекта · Как создавали сайт */
+  p.addEventListener('click',e=>{ const b=e.target.closest('[data-sub]'); if(!b) return;
+    $$('[data-sub]',p).forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+    const sp=$('.bsub-p',p); sp.classList.remove('swap'); sp.innerHTML=brandSub(b.dataset.sub); void sp.offsetWidth; sp.classList.add('swap');
+    setHash(b.dataset.sub==='brend'?'':b.dataset.sub); });
 }
 
 /* ---------- 6.4 Стать партнёром: можно выбрать несколько вариантов ---------- */
@@ -323,9 +359,9 @@ function openPartner(){
       <div class="ptypes" role="group" aria-label="Кто вы, можно выбрать несколько">${D.partnerTypes.map(t=>`<button type="button" class="ptype" data-pt="${t.id}" aria-pressed="${sel.has(t.id)}">${A.ic(t.ic,26)}<b>${t.n}</b></button>`).join('')}</div>
       <div class="pcond" id="pcond">${cond()}</div>
     </div>
-    <form class="form" novalidate data-ok="Спасибо! Заявка отправлена, мы свяжемся с вами">
+    <form class="form" novalidate data-sheet="Стать партнёром" data-ok="Спасибо! Заявка отправлена, мы свяжемся с вами">
       <h3>Заявка</h3>
-      <input type="hidden" name="type" value="${[...sel].join(',')}">
+      <input type="hidden" name="type" data-label="Кем хочет стать" value="${D.partnerTypes.filter(t=>sel.has(t.id)).map(t=>t.n).join(', ')}">
       ${A.field('Фамилия и имя','name',{req:1,ph:'Например, Хасанова Айгуль'})}
       ${A.field('Телефон','phone',{req:1,type:'tel'})}
       ${A.field('Контакт в соцсетях','social',{ph:'Ссылка на ВКонтакте, Telegram или MAX'})}
@@ -336,9 +372,49 @@ function openPartner(){
   $$('[data-pt]',box).forEach(b=>b.addEventListener('click',()=>{
     const id=b.dataset.pt; if(sel.has(id)) sel.delete(id); else sel.add(id);
     b.setAttribute('aria-pressed',String(sel.has(id)));
-    const pc=$('#pcond',box); pc.classList.remove('swap'); pc.innerHTML=cond(); void pc.offsetWidth; pc.classList.add('swap'); $('input[name="type"]',box).value=[...sel].join(',');
+    const pc=$('#pcond',box); pc.classList.remove('swap'); pc.innerHTML=cond(); void pc.offsetWidth; pc.classList.add('swap'); $('input[name="type"]',box).value=D.partnerTypes.filter(t=>sel.has(t.id)).map(t=>t.n).join(', ');
   }));
   A.bindForms(box);
+}
+
+/* ---------- паспорт туриста: плавающая кнопка справа внизу и окно (правка 114) ---------- */
+A.passportSVG = (w=118) => `<svg class="pp-svg" viewBox="0 0 120 92" width="${w}" aria-hidden="true" focusable="false">
+  <rect x="6" y="8" width="54" height="76" rx="5" fill="#1E3F7A"/><rect x="60" y="8" width="54" height="76" rx="5" fill="#24498C"/>
+  <rect x="10" y="12" width="48" height="68" rx="3" fill="#F7F3E8"/><rect x="62" y="12" width="48" height="68" rx="3" fill="#FBF8EF"/>
+  <path d="M60 10v72" stroke="#173462" stroke-width="2"/>
+  ${[[22,30,'#C8372D','M-6 0a6 6 0 1 0 12 0a6 6 0 1 0-12 0M0-9v4M0 5v4'],[46,30,'#2F7A4A','M-7 7L0-7L7 7M-3.5 0h7'],[22,58,'#E2A92B','M0-8v16M-6-4h12M-4 8h8'],[46,58,'#1E2550','M-6 8V-2L0-8L6-2V8M-6 2h12']].map(([x,y,c,d])=>`<g transform="translate(${x} ${y})"><circle r="10" fill="none" stroke="${c}" stroke-width="1.4" stroke-dasharray="2 2" opacity=".75"/><path d="${d}" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>`).join('')}
+  ${[[74,30,'#2F7A4A','M-7 6L-2-6L2 2L5-3L8 6'],[98,30,'#C8372D','M-6 0h12M0-7v14'],[74,58,'#1E2550','M-7 3c3-6 6 0 9-5s4 3 5 0'],[98,58,'#E2A92B','M-5-6c5 0 5 12 0 12M3-7v14']].map(([x,y,c,d])=>`<g transform="translate(${x} ${y})"><circle r="10" fill="none" stroke="${c}" stroke-width="1.4" stroke-dasharray="2 2" opacity=".75"/><path d="${d}" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>`).join('')}
+</svg>`;
+function openPassport(){
+  const P=D.passport||{};
+  A.overlay({title:'Паспорт туриста',cls:'pass-ovl',hash:'pasport-turista',html:`<div class="pass-in">
+    <div class="pass-art">${A.passportSVG(260)}</div>
+    <div class="pass-txt">
+      <h2>Паспорт туриста Альшеевского района</h2>
+      <p>Путешествуйте по району и собирайте тамги: у каждого места свой знак. Отметки ставят в паспорт прямо на месте.</p>
+      <div class="pass-b"><h4>${A.ic('pin',18)}Где получить</h4><p>Паспорт выдают в ${A.esc(P.where||'кафе «Триумф»')}.</p></div>
+      <div class="pass-b"><h4>${A.ic('route',18)}Путеводитель по тамгам</h4><p>Девять мест сезона, знаки и как доехать на машине, электричке или автобусе.</p>
+        <p><a class="btn dark" href="${P.guide||'#'}" download>${A.ic('ext',16)}Скачать путеводитель, PDF</a> <a class="btn" href="tamgi.html">Маршрут по знакам</a></p></div>
+      <div class="pass-b"><h4>${A.ic('calendar',18)}Тамги по сезонам</h4><p>Каждый сезон свой набор тамг, поэтому в район хочется вернуться.</p>
+        <ul class="pass-seasons">${(P.seasons||[]).map(x=>`<li><b>${A.esc(x.n)}</b> ${A.esc(x.t)}</li>`).join('')}</ul></div>
+      <div class="pass-b"><h4>${A.ic('star',18)}Подарок за набор</h4><div class="pass-gifts">${(P.gifts||[]).map(g=>`<span><b>${g.n}</b> ${g.n<5?'тамги':'тамг'}<i>${A.esc(g.t)}</i></span>`).join('')}</div></div>
+    </div></div>`});
+}
+function passportFab(){
+  if(['tamgi','pasport'].includes(A.page)) return;
+  let hidden=false; try{ hidden=sessionStorage.getItem('alshey.passfab')==='0'; }catch(e){}
+  if(hidden) return;
+  const w=document.createElement('div'); w.className='pass-fab';
+  w.innerHTML=`<button type="button" class="pf-open" aria-label="Получить паспорт туриста">${A.passportSVG(74)}<span>Получить<br>паспорт туриста</span></button><button type="button" class="pf-x" aria-label="Скрыть">${A.ic('x',14)}</button>`;
+  document.body.appendChild(w);
+  /* на главной кнопка появляется, когда плашки ушли вверх, чтобы не закрывать «Размещение» */
+  const show=()=>w.classList.toggle('on',!A.isHome||scrollY>innerHeight*.45);
+  requestAnimationFrame(()=>requestAnimationFrame(show));
+  if(A.isHome) addEventListener('scroll',show,{passive:true});
+  /* через 6 секунд надпись прячется, остаётся книжка: она не закрывает формы и кнопки; при наведении надпись снова видна */
+  setTimeout(()=>w.classList.add('mini'),6000);
+  $('.pf-open',w).addEventListener('click',()=>{ location.hash='pasport-turista'; });
+  $('.pf-x',w).addEventListener('click',()=>{ w.classList.remove('on'); setTimeout(()=>w.remove(),400); try{ sessionStorage.setItem('alshey.passfab','0'); }catch(e){} });
 }
 
 /* ---------- Контакты: Гридина и АНО отдельно, из соцсетей только ВКонтакте ---------- */
@@ -370,12 +446,28 @@ A.bindForms = root => $$('form.form',root).forEach(f=>{
     $$('.fld',f).forEach(w=>{const c=$('input,textarea,select',w);let msg='';
       if(c.required&&!c.value.trim()) msg='Заполните поле';
       else if(c.type==='tel'&&c.value.trim()&&c.value.replace(/\D/g,'').length<10) msg='Введите номер полностью, например +7 900 123-45-67';
+      else if(c.type==='email'&&c.value.trim()&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.value.trim())) msg='Проверьте адрес почты, например name@mail.ru';
       w.classList.toggle('bad',!!msg);$('.err',w).textContent=msg;if(msg){ok=false;first=first||c;}});
     const ag=$('.agree',f);if(ag){const c=$('input',ag);ag.classList.toggle('bad',!c.checked);if(!c.checked){ok=false;first=first||c;}}
     if(!ok){first.focus();return;}
+    A.sendForm(f);
     f.innerHTML=`<div class="sent-ok">${A.ic('check',36)}<b>${A.esc(f.dataset.ok||'Заявка отправлена. Мы свяжемся с вами')}</b></div>`;
   });
 });
+
+/* Отправка формы в Google-таблицу (приёмник tools/google-sheets/Code.gs). Лист = название формы (data-sheet),
+   столбцы = подписи полей. Пока D.forms.endpoint пустой, заявка никуда не уходит. */
+A.sendForm = f => {
+  const row={ 'Страница':document.title, 'Адрес страницы':(()=>{ try{ return decodeURI(location.href); }catch(e){ return location.href; } })() };
+  if(f.dataset.obj) row['Объект']=f.dataset.obj;
+  $$('.fld',f).forEach(w=>{ const c=$('input,textarea,select',w), l=$('label,span',w); if(!c) return;
+    row[(l?l.textContent:c.name).replace(/\s*\*$/,'').trim()]=c.value.trim(); });
+  $$('input[type="hidden"]',f).forEach(h=>{ row[h.dataset.label||h.name]=h.value; });
+  const ag=$('.agree input',f); if(ag) row['Согласие на обработку данных']=ag.checked?'да':'нет';
+  const url=D.forms&&D.forms.endpoint; if(!url) return;
+  const body=new URLSearchParams({sheet:f.dataset.sheet||'Заявки', data:JSON.stringify(row)});
+  fetch(url,{method:'POST',mode:'no-cors',body}).catch(()=>{});
+};
 
 /* ---------- 5.22 галерея ---------- */
 A.gallery = function(slides){
@@ -411,16 +503,18 @@ function fon(){
 /* ---------- маршрутизация по якорю (3: ссылкой можно поделиться, «Назад» закрывает) ---------- */
 function route(ev){
   const h=location.hash.slice(1), [k,sub]=h.split('/');
-  const want = k==='o-brende'||k==='partneram'||k==='kontakty' ? h : null;
-  if(!want){ if(cur&&cur.o.hash&&['o-brende','partneram','kontakty'].includes(cur.o.hash.split('/')[0])) A.closeOverlay(true); return; }
+  const want = ['o-brende','partneram','kontakty','pasport-turista'].includes(k) ? h : null;
+  if(!want){ if(cur&&cur.o.hash&&['o-brende','partneram','kontakty','pasport-turista'].includes(cur.o.hash.split('/')[0])) A.closeOverlay(true); return; }
   if(A.ovlHash()===want) return;
-  if(k==='o-brende') openBrand(sub||''); else if(k==='partneram') openPartner(); else openContacts();
+  if(k==='o-brende') openBrand(sub||''); else if(k==='partneram') openPartner(); else if(k==='pasport-turista') openPassport(); else openContacts();
   if(cur) cur.o.nav = !!ev;
 }
 A.route = route;
 
 document.addEventListener('DOMContentLoaded',()=>{
-  header(); footer(); fon();
+  header(); footer(); fon(); passportFab();
+  /* раздел посещён: на главной его гора окрасится в свой цвет (правка 112) */
+  if(D.tiles.some(t=>t.key===A.page)){ try{ const v=JSON.parse(localStorage.getItem('alshey.seen')||'[]'); if(!v.includes(A.page)){ v.push(A.page); localStorage.setItem('alshey.seen',JSON.stringify(v)); } }catch(e){} }
   window.addEventListener('hashchange',route);
   route(null);
   window.addEventListener('storage',e=>{ if(e.key===KEY){ try{A.state=Object.assign(A.state,JSON.parse(e.newValue||'{}'));}catch(_){} A.updCounter(false); document.dispatchEvent(new CustomEvent('plan:change')); } });

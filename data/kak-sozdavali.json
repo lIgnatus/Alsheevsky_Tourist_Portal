@@ -1,0 +1,32 @@
+[
+  {
+    "key": "tury",
+    "gora": "Сусактау",
+    "ph": "assets/img/kak-sozdavali/susaktau.jpg",
+    "why": "Почти правильный конус над Дёмой. Тропа к вершине стала знаком раздела «Туры»."
+  },
+  {
+    "key": "sobytiya",
+    "gora": "Сатыртау",
+    "ph": "assets/img/kak-sozdavali/satyrtau.jpg",
+    "why": "Плоская вершина читается как сцена, поэтому гора досталась календарю событий."
+  },
+  {
+    "key": "filmy",
+    "gora": "Нарыстау",
+    "ph": "assets/img/kak-sozdavali/narystau.jpg",
+    "why": "Беседка на вершине похожа на готовый кадр, она выходит за край плашки «Фильмы»."
+  },
+  {
+    "key": "suveniry",
+    "gora": "Красный мыс",
+    "ph": "assets/img/kak-sozdavali/krasny-mys.jpg",
+    "why": "Красная глина над водой Асылыкуля: ремесло и озеро в одном силуэте."
+  },
+  {
+    "key": "razmeshchenie",
+    "gora": "Ярыштау",
+    "ph": "assets/img/kak-sozdavali/yaryshtau.jpg",
+    "why": "Мягкий купол похож на крышу юрты, это про дом и ночлег."
+  }
+]

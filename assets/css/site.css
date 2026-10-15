@@ -1078,3 +1078,175 @@ body.fon-map::before{will-change:transform;transform:translateZ(0)}
   .dk-full{right:calc(50% - 140px - 4px)}
   .pop-leaf .leaflet-popup-content{width:248px!important}
 }
+
+
+/* ================= Правки v2 (110–122) ================= */
+
+/* 110. Кнопка «Назад» в шапке внутренних страниц */
+.hdr-back{flex:0 0 auto;margin-right:-10px;transition:transform .2s var(--ease),background .2s}
+.hdr-back:hover{transform:translateX(-2px)}
+@media (max-width:767px){.hdr-back{width:34px;height:34px;margin-right:-4px}}
+
+/* 111. Плашки: только название, гора мелко в правом верхнем углу белой части */
+.mc-txt{padding:20px 14px 14px}
+.mc-txt b{margin-top:0}
+.mc-txt .gora-n{position:absolute;right:12px;top:5px;margin:0;font:italic 400 12px/1.2 var(--f-old);color:var(--mc-muted);opacity:.78;white-space:nowrap;letter-spacing:.01em}
+@media (max-width:767px){.mc-txt{padding:18px 11px 12px}.mc-txt .gora-n{font-size:11px;right:9px;top:4px}}
+
+/* 112. Цвет плашек: сначала все серые; раздел посмотрели и вернулись, гора и низ плашки окрашиваются.
+   У «Сувениров» (Красный мыс) низ цвета воды Асылыкуля */
+.mc .art svg{transition:transform .3s var(--ease),filter .9s ease}
+.mc .mc-txt{transition:background-color .9s ease}
+.mc:not(.seen){--card:#FFFFFF}
+.mc:not(.seen) .art svg{filter:grayscale(1) contrast(.92) brightness(1.03)}
+.mc:not(.seen) .mc-txt b{color:#3E423D}
+.mc:not(.seen):hover .art svg,.mc:not(.seen):focus-visible .art svg{filter:grayscale(.35)}
+.mc.seen{--card:var(--tint)}
+.mc.seen .mc-txt b{color:var(--mc-c)}
+.mc.fresh .art svg{animation:mcColor 1.6s .3s ease both}
+.mc.fresh .mc-txt{animation:mcCard 1.6s .3s ease both}
+@keyframes mcColor{from{filter:grayscale(1)}to{filter:grayscale(0)}}
+@keyframes mcCard{from{background-color:#FFFFFF}to{background-color:var(--tint)}}
+
+/* После видео плашки появляются по одной, штриховка горы прорисовывается линия за линией снизу вверх */
+.tiles.enter .mc{animation:tileRise .7s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 160ms)}
+.tiles.enter .mc .art svg{animation:hatchUp 1.6s steps(30,end) both;animation-delay:calc(var(--i) * 160ms + .25s)}
+.tiles.enter .mc.fresh .art svg{animation:hatchUp 1.6s steps(30,end) both,mcColor 1.6s ease both;animation-delay:calc(var(--i) * 160ms + .25s),calc(var(--i) * 160ms + 2s)}
+.mc.fresh .mc-txt b{animation:mcInk 1.6s .3s ease both}
+.tiles.enter .mc.fresh .mc-txt,.tiles.enter .mc.fresh .mc-txt b{animation-delay:calc(var(--i) * 160ms + 2s)}
+@keyframes mcInk{from{color:#3E423D}to{color:var(--mc-c)}}
+@keyframes tileRise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes hatchUp{from{clip-path:inset(100% -20% 0 -20%)}to{clip-path:inset(-45% -20% 0 -20%)}}
+
+/* 114. Паспорт туриста: голубая книжка в белом свечении справа внизу */
+.pass-fab{position:fixed;right:22px;bottom:22px;z-index:40;opacity:0;transform:translateY(24px) scale(.94);transition:opacity .6s ease,transform .7s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.pass-fab.on{opacity:1;transform:none;pointer-events:auto}
+.pass-fab .pf-open{display:flex;align-items:center;gap:10px;border:0;cursor:pointer;padding:10px 18px 10px 12px;border-radius:999px;background:radial-gradient(closest-side,rgba(255,255,255,.96),rgba(255,255,255,.86) 62%,rgba(255,255,255,0));box-shadow:0 0 34px 16px rgba(255,255,255,.78);color:#1E3F7A;font:700 14.5px/1.15 var(--f);text-align:left}
+.pass-fab .pp-svg{flex:0 0 auto;filter:drop-shadow(0 6px 10px rgba(30,63,122,.28));transition:transform .35s var(--ease)}
+.pass-fab .pf-open:hover .pp-svg{transform:rotate(-4deg) scale(1.06)}
+.pass-fab .pf-open span{text-shadow:0 0 10px #fff}
+.pass-fab .pf-x{position:absolute;right:-4px;top:-6px;width:24px;height:24px;border-radius:50%;border:0;background:#fff;color:#1E3F7A;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px -2px rgba(30,63,122,.35);opacity:.85}
+.pass-fab .pf-x:hover{opacity:1}
+body.locked .pass-fab,body.intro .pass-fab{opacity:0;pointer-events:none}
+.pass-fab .pf-open span{display:block;max-width:180px;overflow:hidden;white-space:nowrap;transition:max-width .5s cubic-bezier(.16,1,.3,1),opacity .35s}
+.pass-fab.mini .pf-open{padding-right:12px;gap:0}
+.pass-fab.mini .pf-open span{max-width:0;opacity:0}
+.pass-fab.mini:hover .pf-open,.pass-fab.mini .pf-open:focus-visible{padding-right:18px;gap:10px}
+.pass-fab.mini:hover .pf-open span,.pass-fab.mini .pf-open:focus-visible span{max-width:180px;opacity:1}
+@media (max-width:767px){.pass-fab{right:10px;bottom:12px}.pass-fab .pf-open{padding:6px 12px 6px 8px;font-size:12.5px}.pass-fab .pp-svg{width:54px;height:auto}}
+body:has(.m-cta) .pass-fab{bottom:84px}
+
+.ovl.pass-ovl{width:min(900px,94vw);background:#F5F8FC}
+.pass-in{display:grid;grid-template-columns:280px 1fr;gap:28px;padding:28px 30px 32px;align-items:start}
+.pass-art{position:sticky;top:0;display:grid;place-items:center;padding:24px 10px;border-radius:22px;background:radial-gradient(closest-side,#fff,rgba(255,255,255,0))}
+.pass-art .pp-svg{width:100%;height:auto;filter:drop-shadow(0 18px 26px rgba(30,63,122,.28))}
+.pass-txt{display:grid;gap:14px}
+.pass-txt h2{font-size:28px;line-height:1.15;color:#1E3F7A}
+.pass-b{background:#fff;border-radius:16px;padding:14px 16px;display:grid;gap:8px;box-shadow:0 8px 20px -16px rgba(30,63,122,.5)}
+.pass-b h4{display:flex;align-items:center;gap:8px;font-size:17px;color:#1E3F7A}
+.pass-b .btn{margin:2px 6px 2px 0}
+.pass-seasons{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pass-seasons li{background:#EEF3FA;border-radius:10px;padding:8px 10px;font-size:14px;line-height:1.3}
+.pass-seasons b{display:block;color:#1E3F7A}
+.pass-gifts{display:flex;flex-wrap:wrap;gap:8px}
+.pass-gifts span{display:grid;justify-items:center;min-width:92px;background:#EEF3FA;border-radius:12px;padding:8px 12px;font-size:13px}
+.pass-gifts b{font-size:24px;line-height:1;color:#1E3F7A}
+.pass-gifts i{font-style:normal;font-weight:700;color:#C8372D}
+@media (max-width:767px){.pass-in{grid-template-columns:1fr;padding:18px 16px 24px;gap:14px}.pass-art{position:static;padding:6px}.pass-art .pp-svg{max-width:200px}.pass-txt h2{font-size:23px}.pass-seasons{grid-template-columns:1fr}}
+
+/* 113. Карта «Что посмотреть»: подробная карточка места справа, на месте плана */
+.plan.focus{animation:ovIn .45s cubic-bezier(.16,1,.3,1) both}
+.plan.focus .pf{display:grid;gap:10px}
+.pf-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pf-back{display:inline-flex;align-items:center;gap:4px;border:0;background:none;color:var(--green);font:600 14px var(--f);cursor:pointer;padding:4px 0}
+.pf-ph{border-radius:14px;overflow:hidden;aspect-ratio:16/10;background:var(--soft)}
+.pf-ph img,.pf-ph svg{width:100%;height:100%;object-fit:cover;display:block}
+.plan.focus h3{font-size:23px;line-height:1.15}
+.pf-meta{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;color:var(--muted)}
+.pf-meta i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.plan.focus .pf > p{font-size:15px;line-height:1.5}
+.plan.focus .emo{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.plan.focus .emo span{width:100%;font:600 10.5px/1.2 var(--f);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.plan.focus .emo i{font-style:normal;font-size:13px;background:#FFF2DC;color:#74501C;border-radius:999px;padding:3px 10px}
+.pf-tip{font-size:14px;background:var(--soft);border-radius:10px;padding:8px 11px}
+.pf-q{margin:0;border-left:3px solid var(--wheat);padding:4px 0 4px 12px;font:italic 400 14.5px/1.45 var(--f-old)}
+.pf-q cite{display:block;font:400 12.5px var(--f);color:var(--muted);margin-top:4px}
+.plan.focus .note{font-size:12px;color:#5B4300;background:var(--warn);border-radius:8px;padding:4px 8px;justify-self:start}
+.pf-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+
+/* 115. Страница тура */
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.emo.big{display:flex;flex-wrap:wrap;gap:8px}
+.emo.big i{font-style:normal;font-size:15.5px;background:#FFF2DC;color:#74501C;border-radius:999px;padding:6px 14px}
+.how-get{gap:12px}
+.how-get .hg{display:grid;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.how-get .hg b{display:flex;align-items:center;gap:8px;font-size:16.5px}
+.how-get .hg p{font-size:15px}
+.tour-media{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.tour-media figure{margin:0;border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:var(--soft)}
+.tour-media figure img,.tour-media figure svg{width:100%;height:100%;object-fit:cover;display:block}
+.tm-video{display:grid;place-items:center;border:1.5px dashed var(--line-strong);background:var(--bg)!important}
+.tm-video a,.tm-video span{display:grid;justify-items:center;gap:6px;text-align:center;font-size:14px;color:var(--muted);padding:10px;text-decoration:none}
+.tm-video a{color:var(--ink)}
+.dur-b,.rate-b{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;color:var(--muted)}
+.rate-b{color:var(--ink)}
+
+/* 116. Окно мероприятия: адрес, как попасть, где остановиться, карта */
+.ev-info{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.ev-info section{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 16px;display:grid;gap:6px;align-content:start}
+.ev-info h3{display:flex;align-items:center;gap:8px;font-size:17px}
+.ev-info p{font-size:15px}
+.ev-info .ev-map-s{grid-column:1/-1}
+.ev-info section:nth-child(2){grid-row:span 2}
+.ev-map{height:260px;border-radius:12px;overflow:hidden;background:var(--soft)}
+.ev-pin span{display:grid;place-items:center;width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#B8862B;color:#fff;box-shadow:0 4px 10px -3px rgba(0,0,0,.45)}
+.ev-pin span svg{transform:rotate(45deg)}
+@media (max-width:767px){.ev-info{grid-template-columns:1fr}.ev-map{height:220px}}
+
+/* 117. «О бренде»: подвкладки, как создавали сайт, ЭтноКомплекс и кинофестиваль */
+.bsub{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.bsub .chip{background:transparent;border-color:var(--print);color:var(--print)}
+.bsub .chip[aria-pressed="true"]{background:var(--print);color:var(--paper)}
+.lead-b{font:italic 400 19px/1.45 var(--f-old);max-width:62ch}
+.howmade{display:grid;gap:18px;margin-top:14px}
+.hm{display:grid;grid-template-columns:minmax(0,1.25fr) 40px minmax(0,.75fr);grid-template-areas:"ph arr tile" "why why why";gap:10px 14px;align-items:center;background:#F4F2EC;border-radius:18px;padding:14px}
+.hm-ph{grid-area:ph;margin:0;border-radius:12px;overflow:hidden;position:relative}
+.hm-ph img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.hm-ph figcaption{position:absolute;left:8px;bottom:8px;background:rgba(20,20,20,.62);color:#fff;font-size:12px;padding:3px 8px;border-radius:999px}
+.hm-arr{grid-area:arr;color:var(--print);opacity:.6;display:grid;place-items:center}
+.hm-tile{grid-area:tile;display:grid;filter:drop-shadow(0 10px 12px rgba(120,92,48,.2))}
+.hm-art{line-height:0}.hm-art svg{width:100%;height:auto;display:block}
+.hm-tile b{background:var(--tint,#fff);margin-top:-1px;padding:16px 12px 2px;font-size:18px;color:var(--mc-c,var(--ink));position:relative}
+.hm-tile i{background:var(--tint,#fff);border-radius:0 0 14px 14px;padding:0 12px 12px;font:italic 400 13px var(--f-old);color:var(--muted)}
+.hm-why{grid-area:why;font-size:15px}
+@media (max-width:767px){.hm{grid-template-columns:1fr 1fr;grid-template-areas:"ph ph" "arr tile" "why why"}.hm-arr{transform:rotate(90deg)}}
+.viz{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+.viz-ph{margin:0;display:grid;gap:6px}
+.viz-ph > svg,.viz-ph > img{width:100%;aspect-ratio:4/3;border-radius:12px;display:block;object-fit:cover;filter:grayscale(.2)}
+.viz-ph figcaption{font-size:13px;color:var(--muted)}
+.fest-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}
+.fest-facts div{border-top:1.5px solid var(--print);padding-top:8px;display:grid;gap:3px}
+.fest-facts b{font:700 38px/1 var(--f);color:var(--red)}
+.fest-facts span{font-size:14px;line-height:1.3}
+.fest-row{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:22px;align-items:start}
+.fest-img{margin:0;border:6px solid #fff;box-shadow:0 14px 26px -16px rgba(0,0,0,.5);transform:rotate(-1.5deg)}
+.fest-img img{width:100%;display:block}
+.fest-row p{margin-bottom:10px}
+@media (max-width:767px){.viz{grid-template-columns:1fr}.fest-facts{grid-template-columns:1fr 1fr}.fest-row{grid-template-columns:1fr}}
+
+/* 118. Сувениры: «Альшеевские мотивы» */
+.motivy{display:grid;grid-template-columns:240px 1fr;gap:26px;align-items:center;margin-top:26px;background:#FBF6EC;border-radius:20px;padding:22px 26px}
+.motivy img{width:100%;height:auto;display:block;mix-blend-mode:multiply}
+.motivy h2{font-size:26px}
+.motivy .slogan{font:italic 400 18px var(--f-old);color:#8A5A2B;margin:2px 0 8px}
+.motivy p{max-width:62ch}
+@media (max-width:767px){.motivy{grid-template-columns:1fr;padding:18px 16px;gap:12px}.motivy img{max-width:220px}}
+
+/* 121. Фильмы: рамки карусели как киноплёнка, аккуратно */
+.car .slide .stk.pic{--c:#26221D;filter:drop-shadow(3px 0 0 var(--c)) drop-shadow(-3px 0 0 var(--c)) drop-shadow(0 12px 16px rgba(0,0,0,.22))}
+.car .slide .pic::before,.car .slide .pic::after{content:"";position:absolute;left:0;right:0;height:15px;z-index:1;pointer-events:none;
+  background:#26221D repeating-linear-gradient(90deg,transparent 0 7px,rgba(244,238,226,.88) 7px 16px,transparent 16px 24px) 0 50%/100% 6px no-repeat}
+.car .slide .pic::before{top:0}
+.car .slide .pic::after{bottom:0}
+.car .slide .tag{top:22px}
+@media (max-width:767px){.car .slide .pic::before,.car .slide .pic::after{height:11px;background-size:100% 4px}}

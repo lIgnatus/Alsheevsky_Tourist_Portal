@@ -46,7 +46,9 @@ function catalog(){
   document.title=`${CFG.title} · Туристический портал Альшеевского района`;
   main.innerHTML=`<div class="page-h"><h1>${CFG.title}</h1><p class="found" id="found"></p></div>
     <p class="demo-note">${ic('spark',18)}<span>${T(CFG.note)}</span></p>
-    ${CFG.how?`<section class="how" aria-label="Как работает лавка"><h2>Как работает лавка</h2><ol><li>Мастер выставляет работы бесплатно</li><li>Покупатель оформляет заказ на сайте</li><li>Портал передаёт заказ мастеру и договаривается о доставке или самовывозе</li></ol><p>Портал работает как агент: небольшая комиссия входит в цену и берётся только с проданного</p></section><div style="height:18px"></div>`:''}
+    ${CFG.how?`<section class="how" aria-label="Как работает лавка"><h2>Как работает лавка</h2><ol><li>Мастер выставляет работы бесплатно</li><li>Покупатель оформляет заказ на сайте</li><li>Портал передаёт заказ мастеру и договаривается о доставке или самовывозе</li></ol><p>Портал работает как агент: небольшая комиссия входит в цену и берётся только с проданного</p><p><b>Где купить вживую.</b> ${T(D.shop?D.shop.offline:'')}</p></section>
+    ${D.motivy?`<section class="motivy" aria-label="${esc(D.motivy.n)}"><img src="${D.motivy.logo}" alt="Логотип арт-сообщества «${esc(D.motivy.n)}»"><div><h2>${esc(D.motivy.n)}</h2><p class="slogan">${esc(D.motivy.slogan)}</p>${D.motivy.txt.map(t=>`<p>${T(t)}</p>`).join('')}</div></section>`:''}
+    <div style="height:18px"></div>`:''}
     <div class="filters" role="search">
       <div class="grp"><span class="lbl">${CFG.typeLbl}:</span><button type="button" class="chip" data-t="all" aria-pressed="true">Все</button>${CFG.types.map(t=>`<button type="button" class="chip" data-t="${esc(t)}" aria-pressed="false">${esc(t)}</button>`).join('')}</div>
       <div class="rt">
@@ -74,16 +76,18 @@ function list(){
     <div class="bd"><div class="tt"><h3>${esc(x.n)}</h3><span class="pr">${CFG.price(x)}</span></div>
       <span class="loc">${ic('pin',15)}${T(CFG.loc(x))}</span>
       <span class="sub">${esc(CFG.sub(x))}</span>
-      ${x.soon?'':`<span>${A.stars(x.rating||0)}${x.reviews?`<small>${x.reviews} отзыва</small>`:'<small>пока без отзывов</small>'}</span>`}</div></a>`).join('')
+      ${x.soon?'':`<span>${A.stars(Math.round(avgOf(x)))}${x.reviews?`<small>${avgOf(x).toFixed(1)} · ${x.reviews} отзыва</small>`:'<small>пока без отзывов</small>'}</span>`}</div></a>`).join('')
     :`<p class="nores" style="grid-column:1/-1">Ничего не нашлось. Измените фильтры.</p>`;
 }
 
 /* ---------- 5.24 отзывы ---------- */
 const REV=[{n:'Ирина',d:'август 2026',r:5,t:'[Пример отзыва для прототипа]'},{n:'Марат',d:'июль 2026',r:5,t:'[Пример отзыва для прототипа]'},{n:'Ольга',d:'июнь 2026',r:4,t:'[Пример отзыва для прототипа]'}];
+const revOf=x=>REV.slice(0,x.reviews||0);
+const avgOf=x=>{ const l=revOf(x); return l.length?l.reduce((a,r)=>a+r.r,0)/l.length:0; };
 function reviews(x){
-  const list=REV.slice(0,x.reviews||0);
-  return `<section class="sec2"><h2>Отзывы</h2>${list.length?`<p>${A.stars(x.rating)} <span class="mono">${x.rating.toFixed(1)}</span> <span class="muted">· ${list.length} отзыва</span></p><div class="revs">${list.map(r=>`<article class="rev"><header><b>${r.n}</b><small>${r.d}</small>${A.stars(r.r)}</header><p>${T(r.t)}</p></article>`).join('')}</div>`:'<p class="muted">Пока нет отзывов.</p>'}
-    <form class="form" novalidate data-ok="Спасибо! Отзыв опубликуем после проверки" style="box-shadow:none;max-width:560px"><h3 style="font-size:18px">Оставить отзыв</h3>
+  const list=revOf(x); x.rating=avgOf(x);
+  return `<section class="sec2"><h2>Отзывы</h2>${list.length?`<p>${A.stars(Math.round(x.rating))} <span class="mono">${x.rating.toFixed(1)}</span> <span class="muted">· ${list.length} отзыва</span></p><div class="revs">${list.map(r=>`<article class="rev"><header><b>${r.n}</b><small>${r.d}</small>${A.stars(r.r)}</header><p>${T(r.t)}</p></article>`).join('')}</div>`:'<p class="muted">Пока нет отзывов.</p>'}
+    <form class="form" novalidate data-sheet="Отзывы" data-obj="${esc(x.n)}" data-ok="Спасибо! Отзыв опубликуем после проверки" style="box-shadow:none;max-width:560px"><h3 style="font-size:18px">Оставить отзыв</h3>
       <div class="fld"><span>Оценка *</span><select name="stars" required aria-label="Оценка"><option value="">выберите</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select><span class="err"></span></div>
       ${A.field('Отзыв','text',{area:1,req:1})}${A.field('Имя','name',{req:1})}
       <button class="btn dark" type="submit">Отправить отзыв</button><p class="fine">Отзыв публикуется после проверки</p></form></section>`;
@@ -95,23 +99,36 @@ function detail(x){
   const crumb=`<p class="crumb"><a href="#">${CFG.title}</a>${ic('right',14)}<span>${esc(x.n)}</span></p>`;
   let left='',form='',info='';
   if(page==='tury'){
-    left=A.gallery((x.imgs&&x.imgs.length?x.imgs:['']).map(s=>s?A.img([s],x.sc||'cone:day','',x.n):A.scene(x.sc||'cone:day')))+`
+    const st=PL[x.stops[0]]||{}, ll=st.LL||[54.0678,54.9421], pt=`${ll[1].toFixed(6)},${ll[0].toFixed(6)}`;
+    const ufa=D.ufa||[54.7388,55.9721], taxi=(D.transit&&D.transit.taxi&&D.transit.taxi.phone)||'[номер такси уточнить]';
+    const media=(x.imgs||[]).filter(Boolean);
+    left=A.gallery((media.length?media:['']).map(s=>s?A.img([s],x.sc||'cone:day','',x.n):A.scene(x.sc||'cone:day')))+`
       <section class="sec2"><h2>Описание</h2><p>${esc(x.txt)}</p></section>
-      <section class="sec2"><h2>Программа</h2><ol class="prog">${x.prog.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></section>
-      <section class="sec2"><h2>Длительность и что включено</h2><p>${x.dur} ч · ${x.incl.map(esc).join(', ')}</p></section>
-      <section class="sec2"><h2>Место старта</h2><p>${T(x.place)}</p><p><a class="btn" href="index.html#mesto/${x.stops[0]}">${ic('pin',17)}Показать на карте</a> <button class="btn" type="button" data-addplan>${ic('plus',17)}Добавить места тура в план</button></p></section>
+      ${x.emo?`<section class="sec2"><h2>Какие эмоции получите</h2><div class="emo big">${x.emo.map(e=>`<i>${esc(e)}</i>`).join('')}</div></section>`:''}
+      <section class="sec2"><h2>Программа</h2><ol class="prog">${x.prog.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><p class="fine">Подробную программу по часам заполняет автор тура по инструкции.</p></section>
+      <section class="sec2"><h2>Сколько займёт и что включено</h2><p><b>${x.dur} ${x.dur===1?'час':x.dur<5?'часа':'часов'}</b> · ${x.incl.map(esc).join(', ')}</p></section>
+      <section class="sec2"><h2>Место встречи</h2><p>${T(x.meet||x.place)}${st.n?`, ${esc(st.n)}`:''}</p>
+        <p class="btns"><a class="btn" href="index.html#mesto/${x.stops[0]}">${ic('pin',17)}На нашей карте</a><a class="btn" href="https://yandex.ru/maps/?pt=${pt}&z=14&l=map" target="_blank" rel="noopener">${ic('ext',16)}Яндекс Карты</a><button class="btn" type="button" data-addplan>${ic('plus',17)}Места тура в план</button></p></section>
+      <section class="sec2 how-get"><h2>Как добраться самостоятельно</h2>
+        <div class="hg"><b>${ic('route',18)}На машине</b><p>Из Уфы около двух часов по трассе М-5 и дороге на Раевский. <a href="https://yandex.ru/maps/?rtext=${ufa[0]},${ufa[1]}~${ll[0].toFixed(6)},${ll[1].toFixed(6)}&rtt=auto" target="_blank" rel="noopener">Маршрут в Яндекс Картах</a></p></div>
+        <div class="hg"><b>${ic('clock',18)}На электричке</b><p>Из Уфы до станции Раевка, дальше на такси: ${T(taxi)}. <a href="https://rasp.yandex.ru/search/suburban/?fromName=%D0%A3%D1%84%D0%B0&toName=%D0%A0%D0%B0%D0%B5%D0%B2%D0%BA%D0%B0" target="_blank" rel="noopener">Расписание электричек</a></p></div>
+        <div class="hg"><b>${ic('route',18)}На автобусе</b><p>До автостанции Раевский, дальше на такси: ${T(taxi)}. <a href="https://rasp.yandex.ru/search/bus/?fromName=%D0%A3%D1%84%D0%B0&toName=%D0%A0%D0%B0%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9" target="_blank" rel="noopener">Расписание автобусов</a></p></div>
+      </section>
+      <section class="sec2"><h2>Фото и видео из тура</h2><div class="tour-media">${media.map(s=>`<figure>${A.img([s],x.sc||'cone:day','',x.n)}</figure>`).join('')}<figure class="tm-video">${x.video?`<a href="${x.video}" target="_blank" rel="noopener">${ic('play',30)}Видео</a>`:`<span>${ic('play',28)}Видео из тура ${T('[пришлёт автор]')}</span>`}</figure></div></section>
       ${(()=>{const fs=[...new Set(x.stops.flatMap(id=>A.filmsOf(id)))];return fs.length?`<section class="sec2"><h2>Кино по маршруту</h2><p>Места этого тура есть в фильмах о людях района.</p><div class="films">${fs.map(f=>A.filmLink(f)).join('')}</div></section>`:'';})()}
       <section class="sec2"><h2>Об авторе</h2><div class="author"><span class="av">${ic('user',28)}</span><div><b>${esc(x.author)}</b><p class="muted" style="font-size:14px">${T('[фото и рассказ о себе пришлёт автор]')}</p></div></div></section>
       ${reviews(x)}`;
-    info=`<span class="type">${esc(x.type)}</span><h1>${esc(x.n)}</h1><span class="loc muted">${ic('pin',15)} ${T(x.place)}</span><span class="pr">от ${rub(x.price)}</span><span class="verified">${ic('check',16)}Проверено администрацией</span>`;
-    form=`<form class="form" novalidate><h3>Оставить заявку</h3>${A.field('Дата','date',{type:'date',req:1})}${A.field('Количество человек','people',{type:'number',min:1,val:2,req:1})}${A.field('Имя','name',{req:1})}${A.field('Телефон','phone',{type:'tel',req:1})}${A.agree()}<button class="btn dark full" type="submit">Отправить заявку</button></form>`;
+    info=`<span class="type">${esc(x.type)}</span><h1>${esc(x.n)}</h1><span class="loc muted">${ic('pin',15)} ${T(x.place)}</span><span class="dur-b">${ic('clock',15)} ${x.dur} ${x.dur===1?'час':x.dur<5?'часа':'часов'}</span><span class="pr">от ${rub(x.price)}</span><span class="rate-b">${x.reviews?`${A.stars(Math.round(avgOf(x)))} ${avgOf(x).toFixed(1)} · ${x.reviews} отзыва`:'пока без отзывов'}</span><span class="verified">${ic('check',16)}Проверено администрацией</span>`;
+    form=`<form class="form" novalidate data-sheet="Заявки на туры" data-obj="${esc(x.n)}"><h3>Оставить заявку</h3>${A.field('Дата','date',{type:'date',req:1})}${A.field('Количество человек','people',{type:'number',min:1,val:2,req:1})}${A.field('Имя','name',{req:1})}${A.field('Телефон','phone',{type:'tel',req:1})}${A.agree()}<button class="btn dark full" type="submit">Отправить заявку</button></form>`;
   }
   if(page==='suveniry'){
     left=A.gallery([A.scene(x.sc),A.scene(x.sc.replace(/:.*/,':green'))])+`
-      <section class="sec2"><h2>О товаре</h2><p>${T('[описание товара пришлёт мастер]')}</p></section>
+      <section class="sec2"><h2>О товаре</h2><p>${T('[описание товара пришлёт мастер по инструкции]')}</p></section>
+      <section class="sec2"><h2>Из чего сделано</h2><p>${esc(x.mat||'')} ${T('[мастер уточнит]')}</p></section>
+      <section class="sec2"><h2>Где купить вживую</h2><p>${T(D.shop?D.shop.offline:'[уточнить]')}</p></section>
       <section class="sec2"><h2>О мастере</h2><div class="author"><span class="av">${ic('user',28)}</span><div><b>${esc(x.craft)}</b><p class="muted" style="font-size:14px">Имя, фото и рассказ мастера публикуются только с его согласия</p></div></div></section>`;
     info=`<span class="type">${esc(x.craft)}</span><h1>${esc(x.n)}</h1><span class="pr">${rub(x.price)}</span><span class="fine">Онлайн-оплата ${T('[уточнить]')}</span>`;
-    form=`<form class="form" novalidate data-ok="Заказ отправлен. Мы свяжемся с вами"><h3>Заказать</h3>${A.field('Количество','qty',{type:'number',min:1,val:1,req:1})}${A.field('Имя','name',{req:1})}${A.field('Телефон','phone',{type:'tel',req:1})}${A.field('Способ получения','way',{options:['Доставка','Самовывоз'],req:1})}${A.agree()}<button class="btn dark full" type="submit">Заказать</button></form>`;
+    form=`<form class="form" novalidate data-sheet="Заказы сувениров" data-obj="${esc(x.n)}" data-ok="Заказ отправлен. Мы свяжемся с вами"><h3>Заказать</h3>${A.field('Количество','qty',{type:'number',min:1,val:1,req:1})}${A.field('Имя','name',{req:1})}${A.field('Телефон','phone',{type:'tel',req:1})}${A.field('Способ получения','way',{options:['Доставка','Самовывоз'],req:1})}${A.agree()}<button class="btn dark full" type="submit">Заказать</button></form>`;
   }
   if(page==='razmeshchenie'){
     const ll=x.mapId&&PL[x.mapId]?PL[x.mapId].LL:toLL(x.xy);
@@ -123,7 +140,7 @@ function detail(x){
       <section class="sec2"><h2>Рядом</h2><div class="chips">${near.map(o=>`<a class="chip" href="index.html#mesto/${o.p.id}">${esc(o.p.n)} · <span class="mono">${o.d<1?'<1':nf(o.d)} км</span></a>`).join('')}</div></section>
       ${x.soon?'':reviews(x)}`;
     info=`<span class="type">${esc(x.type)}</span><h1>${esc(x.n)}</h1><span class="loc muted">${ic('pin',15)} ${esc(x.place)}</span>${x.soon?'<span class="pr soon-b">скоро открытие</span>':`<span class="pr">${rub(x.price)} / сутки</span>`}`;
-    form=x.soon?`<form class="form" novalidate data-ok="Спасибо! Напишем, когда откроется бронирование"><h3>Узнать об открытии</h3><p class="fine" style="margin:-4px 0 6px">Оставьте контакт, и мы напишем, когда можно будет забронировать.</p>${A.field('Имя','name',{req:1})}${A.field('Телефон или соцсеть','contact',{req:1})}${A.agree()}<button class="btn dark full" type="submit">Сообщите мне</button></form>`:`<form class="form" novalidate><h3>Оставить заявку</h3><div class="fld2">${A.field('Заезд','in',{type:'date',req:1})}${A.field('Выезд','out',{type:'date',req:1})}</div>${A.field('Гости','guests',{type:'number',min:1,val:2,req:1})}${A.field('Имя','name',{req:1})}${A.field('Телефон','phone',{type:'tel',req:1})}${A.agree()}<button class="btn dark full" type="submit">Отправить заявку</button></form>`;
+    form=x.soon?`<form class="form" novalidate data-sheet="Узнать об открытии" data-obj="${esc(x.n)}" data-ok="Спасибо! Напишем, когда откроется бронирование"><h3>Узнать об открытии</h3><p class="fine" style="margin:-4px 0 6px">Оставьте контакт, и мы напишем, когда можно будет забронировать.</p>${A.field('Имя','name',{req:1})}${A.field('Телефон или соцсеть','contact',{req:1})}${A.agree()}<button class="btn dark full" type="submit">Сообщите мне</button></form>`:`<form class="form" novalidate data-sheet="Заявки на размещение" data-obj="${esc(x.n)}"><h3>Оставить заявку</h3><div class="fld2">${A.field('Заезд','in',{type:'date',req:1})}${A.field('Выезд','out',{type:'date',req:1})}</div>${A.field('Гости','guests',{type:'number',min:1,val:2,req:1})}${A.field('Имя','name',{req:1})}${A.field('Телефон','phone',{type:'tel',req:1})}${A.agree()}<button class="btn dark full" type="submit">Отправить заявку</button></form>`;
   }
   main.innerHTML=`<div class="page-h" style="padding-bottom:12px">${crumb}</div>
     ${x.soon?'':`<p class="demo-note">${ic('spark',18)}<span>Карточка для примера</span></p>`}

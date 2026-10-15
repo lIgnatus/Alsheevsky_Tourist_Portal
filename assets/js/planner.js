@@ -129,7 +129,7 @@ MP.forEach((p,i)=>{
   ANC[p.id]=[17+(k?(k%2?-1:1)*15*Math.ceil(k/2):0),33];
   const m=L.marker(p.ll,{icon:L.divIcon({className:'pin',html:pinSVG(p,''),iconSize:[34,34],iconAnchor:ANC[p.id]}),title:p.n,keyboard:true,riseOnHover:true}).addTo(map);
   m.bindTooltip(p.n,{direction:'top',offset:[0,-30],className:'pin-tip',opacity:1});
-  m.on('click',()=>{ m.closeTooltip(); wake(); showPop(p.id); });
+  m.on('click',()=>{ m.closeTooltip(); wake(); showPop(p.id); focusPlace(p.id); });
   m.on('keypress',e=>{if(e.originalEvent.key==='Enter')showPop(p.id);});
   markers[p.id]=m;
 });
@@ -164,7 +164,7 @@ function popHTML(p){
 function popNode(p){
   const t=document.createElement('template'); t.innerHTML=popHTML(p).trim(); const n=t.content.firstElementChild;
   const tog=n.querySelector('[data-tog]');
-  if(tog) tog.addEventListener('click',e=>{ e.stopPropagation(); const added=A.toggle(tog.dataset.tog); A.toast(added?`«${p.n}» в плане. План справа от карты`:`«${p.n}» убрали из плана`); });
+  if(tog) tog.addEventListener('click',e=>{ e.stopPropagation(); focusId=null; const added=A.toggle(tog.dataset.tog); A.toast(added?`«${p.n}» в плане. План справа от карты`:`«${p.n}» убрали из плана`); });
   const more=n.querySelector('[data-more]'), desc=n.querySelector('.desc');
   more.addEventListener('click',e=>{ e.stopPropagation(); desc.hidden=!desc.hidden; more.textContent=desc.hidden?'Подробнее':'Свернуть'; more.setAttribute('aria-expanded',String(!desc.hidden)); pop.update(); });
   n.querySelectorAll('img').forEach(i=>i.addEventListener('load',()=>pop.update(),{once:true}));
@@ -248,12 +248,49 @@ function planText(plan,P){
   L.push('',`Маршрут в Яндекс Картах ${yandex(plan,P)}`);
   return L.join('\n');
 }
+/* ---------- подробная карточка места справа, на месте плана (правка 113) ---------- */
+let focusId=null;
+function focusPlace(id){
+  if(A.inPlan(id)){ focusId=null; render(); return; }
+  focusId=id; render();
+  if(matchMedia('(max-width:940px)').matches) planEl.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function focusHTML(p){
+  const soon=p.st==='soon', films=filmLinks(p.id), rt=(D.route||[]).find(r=>r.id===p.id), posts=(window.POSTS&&POSTS[p.id]||[]).slice(0,1);
+  const notes=[p.approx?'Точка на карте условная, координаты уточняем':'',p.demo?'Пример партнёра для прототипа':'',p.filler?'Описание временное, уточним по фактам':''].filter(Boolean);
+  return `<div class="pf">
+    <div class="pf-top"><small class="caps muted">Место на карте</small>${S.ids.length?`<button type="button" class="pf-back" data-back>${ic('left',15)}К плану</button>`:''}</div>
+    <div class="pf-ph">${A.img((p.loc?[p.loc]:[]).concat(p.ph?[p.ph]:[]), p.sc, p.so, p.n)}</div>
+    <h3>${esc(p.n)}</h3>
+    <span class="pf-meta" style="--c:${TYPE[p.t].c}"><i></i>${TYPE[p.t].n} · ${p.t==='stay'?'ночлег':soon?'скоро':'на месте '+dur(p.d)}${p.st==='near'?' · соседний район':''}</span>
+    ${films?`<span class="films">${films}</span>`:''}
+    <p>${esc(p.txt)}</p>
+    ${p.emo?`<div class="emo"><span>Эмоции</span>${p.emo.map(e=>`<i>${esc(e)}</i>`).join('')}</div>`:''}
+    ${p.tip?`<p class="pf-tip"><b>Совет.</b> ${esc(p.tip)}</p>`:''}
+    ${rt?`<p class="pf-tip"><b>Знак маршрута ${esc(rt.code)}.</b> ${esc(rt.why)}</p>`:''}
+    ${posts.map(q=>`<blockquote class="pf-q">«${esc(q.t)}»<cite>${esc(q.src)}, <a href="${q.url}" target="_blank" rel="noopener">пост ВКонтакте</a></cite></blockquote>`).join('')}
+    ${notes.map(n=>`<span class="note">${n}</span>`).join('')}
+    <div class="pf-acts">${soon?`<button class="btn" type="button" disabled>Скоро</button>`:`<button class="btn dark" type="button" data-add-f="${p.id}">${ic('plus',17)}В план</button>`}<a class="btn" href="https://yandex.ru/maps/?pt=${p.ll[1]},${p.ll[0]}&z=14&l=map" target="_blank" rel="noopener">${ic('ext',16)}Яндекс Карты</a></div>
+  </div>`;
+}
+
 function render(){
   const P=params(); PP=P;
   A.save();
   S.ids=[...new Set(S.ids)].filter(id=>PL[id]&&PL[id].t!=='event');
   const sel=S.ids.filter(id=>PL[id].st!=='soon');
   MP.forEach(p=>markers[p.id].setIcon(L.divIcon({className:'pin',html:pinSVG(p,''),iconSize:[34,34],iconAnchor:ANC[p.id]})));
+  if(focusId&&!A.inPlan(focusId)&&PL[focusId]){
+    PLAN=sel.length?build(P):null;
+    if(PLAN){ let n=0; PLAN.rows.forEach(r=>{ if(r.k==='visit'){ r.n=++n; markers[r.p.id].setIcon(L.divIcon({className:'pin in',html:pinSVG(r.p,r.n),iconSize:[34,34],iconAnchor:ANC[r.p.id]})); } }); }
+    reapplyFilter();
+    planEl.innerHTML=focusHTML(PL[focusId]); planEl.classList.add('focus');
+    const add=$('[data-add-f]',planEl); if(add) add.addEventListener('click',()=>{ const id=add.dataset.addF; focusId=null; A.toggle(id); A.toast(`«${PL[id].n}» в плане`); });
+    const bk=$('[data-back]',planEl); if(bk) bk.addEventListener('click',()=>{ focusId=null; render(); });
+    if(popId) showPop(popId);
+    return;
+  }
+  focusId=null; planEl.classList.remove('focus');
   if(!sel.length){
     PLAN=null; $('#excWrap').hidden=true;
     planEl.innerHTML=`<header><small class="caps muted">Ваш план · ${P.days} ${dayWord(P.days)}</small></header><p class="empty">Пока пусто. Нажмите на метку на карте, откроется карточка места с кнопкой „+ В план“</p>`;
